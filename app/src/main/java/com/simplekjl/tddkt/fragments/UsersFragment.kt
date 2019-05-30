@@ -18,7 +18,7 @@ private const val ARG_PARAM2 = "param2"
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [UsersFragment.OnFragmentInteractionListener] interface
+ * [UsersFragment.UsersFragmentInteractionListener] interface
  * to handle interaction events.
  * Use the [UsersFragment.newInstance] factory method to
  * create an instance of this fragment.
@@ -28,7 +28,7 @@ class UsersFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: UsersFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +53,10 @@ class UsersFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is UsersFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException(context.toString() + " must implement UsersFragmentInteractionListener")
         }
     }
 
@@ -76,7 +76,7 @@ class UsersFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface UsersFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
@@ -92,7 +92,7 @@ class UsersFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             UsersFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
