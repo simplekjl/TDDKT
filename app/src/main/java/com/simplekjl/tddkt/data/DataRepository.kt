@@ -8,7 +8,7 @@ import com.simplekjl.tddkt.data.models.User
 
 interface DataRepository {
 
-    fun getUsers(): Array<User>
-    fun getPosts(): Array<Post>
-    fun getComments(): Array<Comment>
+    fun getUsers(): MutableList<User>
+    fun getPosts(): MutableList<Post>
+    fun getComments(): MutableList<Comment>
 }

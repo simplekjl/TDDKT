@@ -1,25 +1,21 @@
 package com.simplekjl.tddkt.data
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.simplekjl.tddkt.data.models.Comment
+import com.simplekjl.tddkt.data.models.Post
+import com.simplekjl.tddkt.data.models.User
 
 
-
-class MainViewModel : ViewModel(){
-
-
-    val viewState: MutableLiveData<MainUiModel> = MutableLiveData()
-    lateinit var repository: DataRepository
-
-    fun getUsers() {
+class Repository : DataRepository{
+    override fun getUsers(): MutableList<User> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun getPosts() {
+    override fun getPosts(): MutableList<Post> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun getComments() {
+    override fun getComments(): MutableList<Comment> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 }

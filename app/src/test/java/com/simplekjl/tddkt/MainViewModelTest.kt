@@ -2,20 +2,22 @@ package com.simplekjl.tddkt
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.simplekjl.tddkt.data.DataRepository
 import com.simplekjl.tddkt.data.MainUiModel
 import com.simplekjl.tddkt.data.MainViewModel
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.network.NetworkService
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 
 /**
@@ -28,8 +30,10 @@ class MainViewModelTest {
     //needed for LiveData Looper
     @Rule
     @JvmField
-    var instantTaskExecutor = InstantTaskExecutorRule()
+    var rule: TestRule = InstantTaskExecutorRule()
 
+    @Mock
+    lateinit var service: NetworkService
     //mocks
     private val viewStateObserver: Observer<MainUiModel> = mock()
     private val mockDataRepository: DataRepository = mock()
@@ -37,38 +41,35 @@ class MainViewModelTest {
 
     @Before
     fun setupStatesInViewModel() {
+        MockitoAnnotations.initMocks(this)
         mainViewModel.viewState.observeForever(viewStateObserver)
         mainViewModel.repository = mockDataRepository
     }
 
     //stubbing
     private fun stubUsersCollection() {
-        val inputStream = this.javaClass.classLoader.getResourceAsStream("users.json")
-        val bytes = ByteArray(inputStream.available())
-        inputStream.read(bytes, 0, bytes.size)
-        val json = String(bytes)
-
-        val users: Array<User> = Gson().fromJson(json, object : TypeToken<User>() {}.type)
+        var users: MutableList<User> = mutableListOf()
+        for (i in 0..10) {
+            users.add(User())
+        }
         whenever(mockDataRepository.getUsers())
             .thenReturn(users)
     }
 
     private fun stubCommentsCollection() {
-        val inputStream = this.javaClass.classLoader.getResourceAsStream("comments.json")
-        val bytes = ByteArray(inputStream.available())
-        inputStream.read(bytes, 0, bytes.size)
-        val json = String(bytes)
-        val comments: Array<Comment> = Gson().fromJson(json, object : TypeToken<Comment>() {}.type)
+        var comments: MutableList<Comment> = mutableListOf()
+        for (i in 0..10) {
+            comments.add(Comment())
+        }
         whenever(mockDataRepository.getComments())
             .thenReturn(comments)
     }
 
     private fun stubPostCollection() {
-        val inputStream = this.javaClass.classLoader.getResourceAsStream("posts.json")
-        val bytes = ByteArray(inputStream.available())
-        inputStream.read(bytes, 0, bytes.size)
-        val json = String(bytes)
-        val posts: Array<Post> = Gson().fromJson(json, object : TypeToken<Post>() {}.type)
+        var posts: MutableList<Post> = mutableListOf()
+        for (i in 0..10) {
+            posts.add(Post())
+        }
         whenever(mockDataRepository.getPosts())
             .thenReturn(posts)
     }
@@ -79,5 +80,20 @@ class MainViewModelTest {
         mainViewModel.getUsers()//act
         verify(mockDataRepository).getUsers()//assert
 
+    }
+
+    @Test
+    fun initializeReturnPosts(){
+        stubPostCollection()
+        mainViewModel.getPosts() //act
+        verify(mockDataRepository).getPosts()
+
+    }
+
+    @Test
+    fun initializeReturnComments(){
+        stubPostCollection()
+        mainViewModel.getComments()
+        verify(mockDataRepository).getComments()
     }
 }
