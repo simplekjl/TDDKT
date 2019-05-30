@@ -1,14 +1,10 @@
-package com.simplekjl.tddkt
+package com.simplekjl.tddkt.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.simplekjl.tddkt.data.DataRepository
-import com.simplekjl.tddkt.data.MainUiModel
-import com.simplekjl.tddkt.data.MainViewModel
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -20,13 +16,7 @@ import org.junit.rules.TestRule
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-
-/**
- * Main View model which holds the logic for all the interactions within the repository and the data states
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class MainViewModelUnitTest {
+class RepositoryTest {
 
     //needed for LiveData Looper
     @Rule
@@ -49,7 +39,7 @@ class MainViewModelUnitTest {
 
     //stubbing
     private fun stubUsersCollection() {
-        var users: MutableList<User> = mutableListOf()
+        val users: MutableList<User> = mutableListOf()
         for (i in 0..10) {
             users.add(User())
         }
@@ -60,7 +50,7 @@ class MainViewModelUnitTest {
     }
 
     private fun stubCommentsCollection() {
-        var comments: MutableList<Comment> = mutableListOf()
+        val comments: MutableList<Comment> = mutableListOf()
         for (i in 0..10) {
             comments.add(Comment())
         }
@@ -71,7 +61,7 @@ class MainViewModelUnitTest {
     }
 
     private fun stubPostCollection() {
-        var posts: MutableList<Post> = mutableListOf()
+        val posts: MutableList<Post> = mutableListOf()
         for (i in 0..10) {
             posts.add(Post())
         }
@@ -82,25 +72,16 @@ class MainViewModelUnitTest {
     }
 
     @Test
-    fun initializeReturnUsers() {
-        stubUsersCollection()  //arrange
-        mainViewModel.getUsers()//act
-        verify(mockDataRepository).getUsers()//assert
-
+    fun getUsersBeingCalled() {
+        stubUsersCollection()
+        mockDataRepository.getUsers()
     }
 
     @Test
-    fun initializeReturnPosts() {
-        stubPostCollection()
-        mainViewModel.getPosts() //act
-        verify(mockDataRepository).getPosts()
-
+    fun getPosts() {
     }
 
     @Test
-    fun initializeReturnComments() {
-        stubPostCollection()
-        mainViewModel.getComments()
-        verify(mockDataRepository).getComments()
+    fun getComments() {
     }
 }

@@ -1,14 +1,13 @@
 package com.simplekjl.tddkt.network
 
-import androidx.lifecycle.LiveData
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 /**
 GET	/posts
@@ -20,26 +19,19 @@ GET	/posts?userId=1
 interface NetworkService {
 
     @GET("users")
-    fun getUsers(@Query("q") query: String,
-               @Query("page") page: Int,
-               @Query("per_page") perPage: Int): LiveData<List<User>>
+    fun getUsers(): Call<List<User>>
+
     @GET("posts?userId={id}")
-    fun getPostsByUserId(@Path("id") userId: String,
-               @Query("page") page: Int,
-               @Query("per_page") perPage: Int): LiveData<List<User>>
+    fun getPostsByUserId(@Path("id") userId: String): Call<List<Post>>
 
     @GET("posts")
-    fun getPosts(@Query("q") query: String,
-               @Query("page") page: Int,
-               @Query("per_page") perPage: Int): LiveData<List<Post>>
+    fun getPosts(): Call<List<Post>>
 
     @GET("comments")
-    fun getComments(@Query("q") query: String,
-               @Query("page") page: Int,
-               @Query("per_page") perPage: Int): LiveData<List<Comment>>
+    fun getComments(): Call<List<Comment>>
 
     @GET("comments?postId={id}")
-    fun getCommentsByPostId(@Path("id") id: String): LiveData<List<Comment>>
+    fun getCommentsByPostId(@Path("id") postId: String): Call<List<Comment>>
 
 
     /**
@@ -49,7 +41,7 @@ interface NetworkService {
         fun create(): NetworkService {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("http://jsonplaceholder.typicode.com/")
+                .baseUrl("https://jsonplaceholder.typicode.com/")
                 .build()
 
             return retrofit.create(NetworkService::class.java)

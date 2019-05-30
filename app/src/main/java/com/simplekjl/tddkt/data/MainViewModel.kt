@@ -1,8 +1,11 @@
 package com.simplekjl.tddkt.data
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
+import com.simplekjl.tddkt.data.models.Comment
+import com.simplekjl.tddkt.data.models.Post
+import com.simplekjl.tddkt.data.models.User
 
 
 class MainViewModel : ViewModel(){
@@ -11,15 +14,19 @@ class MainViewModel : ViewModel(){
     val viewState: MutableLiveData<MainUiModel> = MutableLiveData()
     lateinit var repository: DataRepository
 
-    fun getUsers() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun init()
+    {
+        repository = Repository()
+    }
+    fun getUsers() : LiveData<List<User>> {
+        return repository.getUsers()
     }
 
-    fun getPosts() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun getPosts() : LiveData<List<Post>>{
+        return repository.getPosts()
     }
 
-    fun getComments() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun getComments() : LiveData<List<Comment>> {
+        return repository.getComments()
     }
 }
