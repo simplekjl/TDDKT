@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 
 class User() : Parcelable {
-    var id: Float = 0.toFloat()
+    var id: Int = 0
     var name: String? = null
     var username: String? = null
     var email: String? = null
@@ -15,7 +15,7 @@ class User() : Parcelable {
     var company: Company = Company()
 
     constructor(parcel: Parcel) : this() {
-        id = parcel.readFloat()
+        id = parcel.readInt()
         name = parcel.readString()
         username = parcel.readString()
         email = parcel.readString()
@@ -24,7 +24,7 @@ class User() : Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeFloat(id)
+        parcel.writeInt(id)
         parcel.writeString(name)
         parcel.writeString(username)
         parcel.writeString(email)
