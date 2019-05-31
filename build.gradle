@@ -5,12 +5,11 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.1.0-alpha04"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,10 +19,91 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
-    }
-}
 
+    }
+    configurations.all
+            {
+                resolutionStrategy {
+                    force "androidx.versionedparcelable:versionedparcelable:$rootProject.ANDROID_JETPACK_CORE"
+                    force "androidx.appcompat:appcompat:$rootProject.APP_COMPAT"
+                    force "androidx.vectordrawable:vectordrawable:$rootProject.ANDROID_JETPACK_CORE"
+                    force "androidx.coordinatorlayout:coordinatorlayout:$rootProject.ANDROID_JETPACK_CORE"
+                    force "androidx.annotation:annotation:1.1.0-alpha02"
+                    force "androidx.core:core:$rootProject.ANDROID_JETPACK_CORE"
+                    force "androidx.fragment:fragment:$rootProject.ANDROID_JETPACK_CORE"
+                    force "androidx.cardview:cardview:$rootProject.ANDROID_CARD_VIEW"
+                    force "androidx.recyclerview:recyclerview:$rootProject.ANDROID_RECYCLER_VIEW"
+                    force "androidx.collection:collection:$rootProject.ANDROID_JETPACK_CORE"
+                    force "androidx.lifecycle:lifecycle-viewmodel:$rootProject.ANDROID_LIFE_CYCLE"
+                    force "androidx.lifecycle:lifecycle-livedata:$rootProject.ANDROID_LIFE_CYCLE"
+                    force "androidx.lifecycle:lifecycle-runtime:$rootProject.ANDROID_LIFE_CYCLE"
+                    force "androidx.lifecycle:lifecycle-common:$rootProject.ANDROID_LIFE_CYCLE"
+                    force "androidx.arch.core:core-common:$rootProject.ANDROID_JETPACK_ARC"
+                    force "androidx.arch.core:core-runtime:$rootProject.ANDROID_JETPACK_ARC"
+                    force "com.google.android.material:material:$rootProject.ANDROID_MATERIAL"
+                    force "androidx.multidex:multidex:$rootProject.MULTI_DEX"
+                    force "org.mockito:mockito-core:$rootProject.MOCKITO_VERSION"
+                    force "com.google.android.gms:play-services-maps:$rootProject.GOOGLE_MAPS"
+                    force "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+                    force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+                    force "androidx.test.espresso:espresso-idling-resource:$rootProject.ESPRESSO_VER"
+                    force "org.apache.httpcomponents:httpcore:4.4.5"
+                    force "org.bouncycastle:bcprov-jdk15on:1.60"
+                    force "org.codehaus.plexus:plexus-utils:1.5.15"
+                    force "com.squareup:javapoet:1.11.0"
+                    force "com.google.guava:guava:26.0-jre"
+                    force "org.objenesis:objenesis:3.0.1"
+                    force "com.google.code.findbugs:jsr305:3.0.2"
+                    force "com.google.auto:auto-common:0.10"
+                    force "org.jetbrains:annotations:16.0.1"
+                    force "net.bytebuddy:byte-buddy:1.9.7"
+                    force "net.bytebuddy:byte-buddy-agent:1.9.7"
+                }
+            }
+}
+ext {
+//    https://developer.android.com/jetpack/androidx/migrate
+    ANDROID_JETPACK_CORE = '1.1.0-alpha01'
+    APP_COMPAT = '1.1.0-alpha01'
+    ANDROID_MATERIAL = '1.1.0-alpha04'
+    ANDROID_RECYCLER_VIEW = '1.1.0-alpha03'
+    ANDROID_CARD_VIEW = '1.0.0'
+    ANDROID_JETPACK_ARC = '2.0.0-rc01'
+    ANDROID_LIFE_CYCLE = '2.1.0-alpha03'
+    GOOGLE_PLAY_SERVICES_LOCATION = '16.0.0' // https://developers.google.com/android/guides/releases
+    GOOGLE_MAPS = '16.1.0'
+    GOOGLE_PAY = '16.0.1'
+    FIREBASE_CORE = '16.0.8'
+    FIREBASE_MESSAGING = '17.5.0'
+    MULTI_DEX = '2.0.1'
+    TESTFAIRY = '1.9.4@aar' // https://docs.testfairy.com/Android/Changelog.html
+    OK_HTTP_VERSION = '3.14.1' // https://github.com/square/okhttp/releases
+    RETROFIT_VERSION = '2.5.0' // https://github.com/square/retrofit/releases
+    GLIDE_VERSION = '4.9.0' // https://github.com/bumptech/glide/releases
+    PARCELER_VERSION = '1.1.12' // https://github.com/johncarl81/parceler/releases
+    JODA_TIME_VERSION = '2.10.1' // https://github.com/JodaOrg/joda-time/releases
+    JODA_COVERTER_VERSION = '2.2.0' // http://www.joda.org/joda-convert/changes-report.html
+    FACEBOOK = '4.41.0' // https://github.com/facebook/facebook-android-sdk/releases
+    CRASHLYTICS = '2.9.9' // https://docs.fabric.io/android/changelog.html#crashlytics
+    MPARTICLE_VERSION = '5.8.0' // https://github.com/mParticle/mparticle-android-sdk/releases
+    DAGGER_VERSION = '2.10' // https://github.com/google/dagger/releases
+    // Can't update Dagger to latest as Radar is using 2.10 in it's implementation
+    TIMBER_LOG = '4.7.1' // https://github.com/JakeWharton/timber/releases
+    FRAG_NAV = '3.2.0' // https://github.com/ncapdevi/FragNav/releases
+    RX_VERSION = '2.1.1'
+    INSTANT_APP = '1.1.0'
+
+    // Instrumented Testing
+    JUNIT = '4.12'
+    ESPRESSO_VER = '3.1.0' // https://developer.android.com/training/testing/espresso/setup.html
+    UI_AUTOMATOR = '2.2.0'
+    ANDROID_TEST_SUPPORT_LIBRARY_VER = '1.1.0'
+    MOCKITO_VERSION = '2.25.1' // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    POWER_MOCK_VERSION = '2.0.0'
+    // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2
+    ASSERTJ = '3.12.2' // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    ROBOELECTRIC_VERSION = '4.2.1' // https://github.com/robolectric/robolectric/releases
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
