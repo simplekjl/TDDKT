@@ -59,18 +59,22 @@ class CommentsFragment : BaseFragment() {
     }
 
     fun setupView(postId: Int) {
-        //avoid leaks using the lifecycle of the fragment
-        viewModel.getCommentsByPostId(postId).observe(viewLifecycleOwner, Observer<List<Comment>> {
-            if (it.isEmpty()) {
-                showErrorMessage("There is no comments to show")
-            } else {
-                showItems()
-                val gridLayoutManager = GridLayoutManager(activity, 1)
-                rv_generic.layoutManager = gridLayoutManager
-                val adapter = CommentAdapter(it, listener)
-                rv_generic.adapter = adapter
-            }
-        })
+        if (postId == -1) {
+            showErrorMessage("Click any post to see the comments")
+        } else {
+            //avoid leaks using the lifecycle of the fragment
+            viewModel.getCommentsByPostId(postId).observe(viewLifecycleOwner, Observer<List<Comment>> {
+                if (it.isEmpty()) {
+                    showErrorMessage("There is no comments to show")
+                } else {
+                    showItems()
+                    val gridLayoutManager = GridLayoutManager(activity, 1)
+                    rv_generic.layoutManager = gridLayoutManager
+                    val adapter = CommentAdapter(it, listener)
+                    rv_generic.adapter = adapter
+                }
+            })
+        }
     }
 
     override fun onDetach() {

@@ -28,13 +28,21 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
 
     override fun onBackPressed() {
         val count = supportFragmentManager.backStackEntryCount
-        if (count == 0) {
-            super.onBackPressed()
-        } else {
-            supportFragmentManager.popBackStack()
-            val f = supportFragmentManager.findFragmentById(R.id.fragment)
-            if (f != null) {
-                updateTitleAndDrawer(f)
+        if (isTwoPanel) {
+            CommentsFragment.postIdObserver.value = -1
+            if (CommentsFragment.postIdObserver.value == -1){
+                super.onBackPressed()
+            }
+        }
+        else{
+            if (count == 0) {
+                super.onBackPressed()
+            } else {
+                supportFragmentManager.popBackStack()
+                val f = supportFragmentManager.findFragmentById(R.id.fragment)
+                if (f != null) {
+                    updateTitleAndDrawer(f)
+                }
             }
         }
     }
