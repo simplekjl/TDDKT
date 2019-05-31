@@ -58,6 +58,7 @@ allprojects {
                     force "org.jetbrains:annotations:16.0.1"
                     force "net.bytebuddy:byte-buddy:1.9.7"
                     force "net.bytebuddy:byte-buddy-agent:1.9.7"
+                    force("org.objenesis:objenesis:2.6")
                 }
             }
 }
