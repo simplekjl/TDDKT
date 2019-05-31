@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,19 +15,16 @@ import com.simplekjl.tddkt.data.MainViewModel
 import com.simplekjl.tddkt.data.models.Post
 import kotlinx.android.synthetic.main.fragment_users.*
 
-class PostsFragment : Fragment(), OnPostClicked{
+class PostsFragment : BaseFragment(), OnPostClicked {
 
-    private  var onInteractionPostFragment : OnInteractionPostFragment? =null
-    override fun onPostClicked(postId: Int) {
-        onInteractionPostFragment?.OnClickedItemPostFragment(postId)
-    }
-
+    private var isTwoPanel = false
+    private var onInteractionPostFragment: OnInteractionPostFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.title = "Post"
+        activity?.title = "Posts"
         arguments?.let {
-
+            isTwoPanel = it.getBoolean("isTwoPanel")
         }
     }
 
@@ -43,17 +39,24 @@ class PostsFragment : Fragment(), OnPostClicked{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
+        showLoader()
         viewModel.init()
         //avoid leaks using the lifecycle of the fragment
         viewModel.getPosts().observe(viewLifecycleOwner, Observer<List<Post>> {
-            val gridLayoutManager = GridLayoutManager(activity, 1)
-            rv_generic.layoutManager = gridLayoutManager
-            val adapter = PostAdapter(it,viewLifecycleOwner,this)
-            rv_generic.adapter = adapter
+            if (it.isEmpty()) {
+                showErrorMessage("There is no post to show")
+            } else {
+                showItems()
+                val gridLayoutManager = GridLayoutManager(activity, 1)
+                rv_generic.layoutManager = gridLayoutManager
+                val adapter = PostAdapter(it, viewLifecycleOwner, this)
+                rv_generic.adapter = adapter
+            }
         })
 
     }
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,17 +73,22 @@ class PostsFragment : Fragment(), OnPostClicked{
 //        listener = null
     }
 
-    interface OnInteractionPostFragment{
-        fun OnClickedItemPostFragment(postId: Int)
+    override fun onPostClicked(postId: Int) {
+        onInteractionPostFragment?.onClickedItemPostFragment(postId)
+    }
+
+
+    interface OnInteractionPostFragment {
+        fun onClickedItemPostFragment(postId: Int)
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(twoPanel: Boolean) =
             PostsFragment().apply {
                 arguments = Bundle().apply {
-
+                    this.putBoolean("isTwoPanel", twoPanel)
                 }
             }
     }
