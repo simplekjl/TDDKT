@@ -10,7 +10,6 @@ import com.simplekjl.tddkt.data.models.User
 
 class MainViewModel : ViewModel(){
 
-
     val viewState: MutableLiveData<MainUiModel> = MutableLiveData()
     lateinit var repository: DataRepository
 
@@ -28,5 +27,9 @@ class MainViewModel : ViewModel(){
 
     fun getComments() : LiveData<List<Comment>> {
         return repository.getComments()
+    }
+
+    fun getCommentsByPostId(postId :Int) : LiveData<List<Comment>>{
+        return repository.getCommentsByPostId(postId)
     }
 }

@@ -1,37 +1,84 @@
 package com.simplekjl.tddkt
 
-import android.net.Uri
+import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.simplekjl.tddkt.data.MainViewModel
-import com.simplekjl.tddkt.data.models.Comment
-import com.simplekjl.tddkt.data.models.User
-import com.simplekjl.tddkt.fragments.UsersFragment
+import androidx.fragment.app.Fragment
+import com.simplekjl.tddkt.fragments.CommentsFragment
+import com.simplekjl.tddkt.fragments.PostsFragment
 
-class MainActivity : AppCompatActivity() , UsersFragment.UsersFragmentInteractionListener {
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
+class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragment {
+
+    private var isTwoPanel = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        viewModel.init()
-        viewModel.getUsers().observe(this, Observer<List<User>> {
-
-        })
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // In landscape
+            isTwoPanel = true
+            setupTwoPanelView()
+        } else {
+            setFragment(PostsFragment.newInstance(isTwoPanel))
+            isTwoPanel = false
+        }
     }
 
-    fun setFragment(newInstance: UsersFragment) {
+    override fun onBackPressed() {
+        val count = supportFragmentManager.backStackEntryCount
+        if (count == 0) {
+            super.onBackPressed()
+        } else {
+            supportFragmentManager.popBackStack()
+            val f = supportFragmentManager.findFragmentById(R.id.fragment)
+            if (f != null) {
+                updateTitleAndDrawer(f)
+            }
+        }
+    }
+
+    fun setFragment(newInstance: Fragment) {
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment, newInstance, "TEST")
+            .replace(R.id.fragment, newInstance)
+            .addToBackStack(null)
             .commit()
+    }
+
+    private fun setupTwoPanelView() {
+
+        val fragmentManager = supportFragmentManager
+
+        fragmentManager.beginTransaction()
+            .replace(R.id.fragment2, PostsFragment.newInstance(isTwoPanel))
+            .commit()
+
+        fragmentManager.beginTransaction()
+            .replace(R.id.fragment3, CommentsFragment.newInstance(isTwoPanel))
+            .commit()
+    }
+
+    override fun onClickedItemPostFragment(postId: Int) {
+        if (isTwoPanel) {
+            CommentsFragment.postIdObserver.value = postId
+        } else {
+            val bundle = Bundle()
+            bundle.putInt("postId", postId)
+            val fragment = CommentsFragment.newInstance(isTwoPanel)
+            fragment.arguments = bundle
+            setFragment(fragment)
+        }
+    }
+
+    private fun updateTitleAndDrawer(fragment: Fragment) {
+        if (fragment is PostsFragment) {
+            supportActionBar?.title = "Posts"
+            title = getString(R.string.posts_title)
+            //set selected item position, etc
+        } else if (fragment is CommentsFragment) {
+            supportActionBar?.title = "Comments"
+            setTitle("Comments")
+        }
     }
 }

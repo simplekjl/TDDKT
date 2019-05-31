@@ -10,7 +10,7 @@ import com.simplekjl.tddkt.data.models.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_item.view.*
 
-class UserAdapter(var users: List<User>, var listener : OnUserClicked) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(var users: List<User>, var listener: OnUserClicked?) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     private lateinit var context: Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +32,7 @@ class UserAdapter(var users: List<User>, var listener : OnUserClicked) : Recycle
 
 
 
-        fun setItem(user: User, listener: OnUserClicked) {
+        fun setItem(user: User, listener: OnUserClicked?) {
             Picasso.get()
                 .load("https://api.adorable.io/avatars/285/oh.png")
                 .into(view.user_profile_photo)
@@ -40,7 +40,7 @@ class UserAdapter(var users: List<User>, var listener : OnUserClicked) : Recycle
             view.comment_username.text = user.name
             view.comment_user_email.text = user.email
             view.comment_body.text = context.getString(R.string.at).plus(user.username)
-            view.more_details.setOnClickListener { listener.onUserClicked(user.id) }
+            view.more_details.setOnClickListener { listener?.onUserClicked(user.id) }
         }
     }
 
