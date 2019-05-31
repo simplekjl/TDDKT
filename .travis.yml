@@ -49,7 +49,7 @@ matrix:
         - echo y |adb devices
 
         #script:
-        # - ./gradlew clean build uiAutomationTest -x test -x signArchives
+        - ./gradlew clean build uiAutomationTest -x test -x signArchives
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
