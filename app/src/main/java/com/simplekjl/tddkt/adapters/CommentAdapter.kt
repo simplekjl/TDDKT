@@ -10,7 +10,7 @@ import com.simplekjl.tddkt.data.models.Comment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.comment_item.view.*
 
-class CommentAdapter(var comments: List<Comment>, var listener: OnCommentClicked) :
+class CommentAdapter(var comments: List<Comment>, var listener: OnCommentClicked?) :
     RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
     private lateinit var context: Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +32,7 @@ class CommentAdapter(var comments: List<Comment>, var listener: OnCommentClicked
 
         fun setItem(
             comment: Comment,
-            listener: OnCommentClicked
+            listener: OnCommentClicked?
         ) {
             view.comment_username.text = comment.email
             view.comment_body.text = comment.body

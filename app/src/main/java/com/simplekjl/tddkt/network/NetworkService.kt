@@ -8,6 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
 GET	/posts
@@ -30,8 +31,11 @@ interface NetworkService {
     @GET("comments")
     fun getComments(): Call<List<Comment>>
 
-    @GET("comments?postId={id}")
-    fun getCommentsByPostId(@Path("id") postId: String): Call<List<Comment>>
+    @GET("comments")
+    fun getCommentsByPostId(@Query("postId") postId: Int): Call<List<Comment>>
+
+    @GET("users/{id}")
+    fun getUserById(@Path("id") userId: Int): Call<User>
 
 
     /**

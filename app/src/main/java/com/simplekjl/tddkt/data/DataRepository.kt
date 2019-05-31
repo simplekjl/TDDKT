@@ -8,9 +8,18 @@ import com.simplekjl.tddkt.data.models.User
 /** Communication layer to pass data **/
 
 interface DataRepository {
-    fun getPosts(): LiveData<List<Post>>
+
+    //Comments
     fun getComments(): LiveData<List<Comment>>
+    fun getCommentsCountByPostId(postId :Int) :LiveData<Int>
+
+    //Users
     fun getUsers(): LiveData<List<User>>
-    fun getCommentsByPostId(postId: String): LiveData<List<Comment>>
+
+    fun getUserById(userId: Int): LiveData<User>
+    //Post
     fun getPostsByUserId(userId: String): LiveData<List<Post>>
+
+    fun getPosts(): LiveData<List<Post>>
+    fun getCommentsByPostId(postId: Int): LiveData<List<Comment>>
 }

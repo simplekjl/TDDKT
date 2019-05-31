@@ -1,37 +1,43 @@
 package com.simplekjl.tddkt
 
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.simplekjl.tddkt.data.MainViewModel
-import com.simplekjl.tddkt.data.models.Comment
-import com.simplekjl.tddkt.data.models.User
-import com.simplekjl.tddkt.fragments.UsersFragment
+import androidx.fragment.app.Fragment
+import com.simplekjl.tddkt.fragments.CommentsFragment
+import com.simplekjl.tddkt.fragments.PostsFragment
 
-class MainActivity : AppCompatActivity() , UsersFragment.UsersFragmentInteractionListener {
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragment {
+
+    private val TAG_POST = "POSTS"
+    private val TAG_COMMENTS = "POSTS"
+    override fun OnClickedItemPostFragment(postId: Int) {
+        val bundle = Bundle()
+        bundle.putInt("postId", postId)
+        val fragment = CommentsFragment.newInstance()
+        fragment.arguments = bundle
+        setFragment(fragment, TAG_COMMENTS)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        viewModel.init()
-        viewModel.getUsers().observe(this, Observer<List<User>> {
-
-        })
+        setFragment(PostsFragment.newInstance(), TAG_POST)
     }
 
-    fun setFragment(newInstance: UsersFragment) {
+    override fun onBackPressed() {
+        val count = supportFragmentManager.backStackEntryCount
+        if (count == 0) {
+            super.onBackPressed()
+        } else {
+            supportFragmentManager.popBackStack()
+        }
+    }
+
+    fun setFragment(newInstance: Fragment, tag: String) {
+
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment, newInstance, "TEST")
+            .replace(R.id.fragment, newInstance)
+            .addToBackStack(null)
             .commit()
     }
 }
