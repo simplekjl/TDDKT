@@ -26,6 +26,9 @@ android {
     androidExtensions {
         experimental = true
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
