@@ -58,5 +58,7 @@ android:
 #  #script:
   #- ./gradlew clean build uiAutomationTest -x test -x signArchives
 
-script:
-- ./gradlew clean test build
+  script:
+    - gradle wrapper
+    - ./gradlew build --scan -s
+    - ./gradlew clean test build
