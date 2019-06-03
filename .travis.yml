@@ -36,25 +36,26 @@ android:
     - android-sdk-license-.+
     - google-gdk-license-.+
 
-before_install:
-  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
-  - nvm install 8
-  - node --version
-  - npm --version
-  - npm install -g appium
-  - echo y | android update sdk -a --no-ui --filter android-26
-  - echo y | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-26
-  - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
-  - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a
-  #- emulator -avd test -no-skin -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
-  - adb wait-for-device get-serialno
-  - sleep 100
-  - chmod +x gradlew
-  - ./gradlew --version
-  - echo y |adb devices
-  #script:
+# Need it for automated testing not supported for TravisCI further work with GitLab or CircleCI
+#before_install:
+#  - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
+#  - nvm install 8
+#  - node --version
+#  - npm --version
+#  - npm install -g appium
+#  - echo y | android update sdk -a --no-ui --filter android-26
+#  - echo y | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-26
+#  - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
+#  - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a
+#  #- emulator -avd test -no-skin -no-window &
+#  - android-wait-for-emulator
+#  - adb shell input keyevent 82 &
+#  - adb wait-for-device get-serialno
+#  - sleep 100
+#  - chmod +x gradlew
+#  - ./gradlew --version
+#  - echo y |adb devices
+#  #script:
   #- ./gradlew clean build uiAutomationTest -x test -x signArchives
 
 script:
