@@ -55,3 +55,8 @@ The technique TDD was used to develop some of the features.
 
 CI status
 ![](https://travis-ci.com/simplekjl/TDDKT.svg?token=byDRpxJMeyFHQg8a28sg&branch=master)
+
+
+#ICONS PROVIDED BY FONT AWESOME
+Link to the license
+https://fontawesome.com/license

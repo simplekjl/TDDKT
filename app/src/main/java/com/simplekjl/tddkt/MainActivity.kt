@@ -8,12 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.simplekjl.tddkt.fragments.CommentsFragment
 import com.simplekjl.tddkt.fragments.PostsFragment
+import com.simplekjl.tddkt.fragments.UserProfileFragment
 import com.simplekjl.tddkt.fragments.UsersFragment
 
 
-class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragment {
+class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragment,
+    UsersFragment.OnUsersFragmentListener {
+
 
     private var isTwoPanel = false
+    private var userId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +28,7 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
             isTwoPanel = true
             setupTwoPanelView()
         } else {
-            setFragment(PostsFragment.newInstance(isTwoPanel))
+            setFragment(PostsFragment.newInstance(isTwoPanel, userId))
             isTwoPanel = false
         }
     }
@@ -49,15 +53,16 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment, newInstance)
             .addToBackStack(null)
-            .commitAllowingStateLoss()
+            .commit()
     }
 
     private fun setupTwoPanelView() {
 
+        //TODO update the navigation for landscape when using profile fragment
         val fragmentManager = supportFragmentManager
 
         fragmentManager.beginTransaction()
-            .replace(R.id.fragment2, PostsFragment.newInstance(isTwoPanel))
+            .replace(R.id.fragment2, PostsFragment.newInstance(isTwoPanel, userId))
             .commit()
 
         fragmentManager.beginTransaction()
@@ -77,8 +82,19 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
         }
     }
 
-    fun updateTitleAndDrawer(fragment: Fragment) {
+    override fun onMoreDetailsCliked(userId: Int) {
+        if (isTwoPanel) {
+            PostsFragment.userIdObserver.value = userId
+        } else {
+            val bundle = Bundle()
+            bundle.putInt("userId", userId)
+            val fragment = UserProfileFragment.newInstance(isTwoPanel, userId)
+            fragment.arguments = bundle
+            setFragment(fragment)
+        }
+    }
 
+    fun updateTitleAndDrawer(fragment: Fragment) {
         when (fragment) {
             is PostsFragment -> {
                 supportActionBar?.title = "Posts"
@@ -88,7 +104,7 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
                 supportActionBar?.title = "Comments"
                 title = "Comments"
             }
-            is UsersFragment ->{
+            is UsersFragment -> {
                 supportActionBar?.title = "User"
                 title = "Users"
             }
@@ -106,7 +122,7 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
                 finish()
             }
             R.id.menu_posts -> {
-                setFragment(PostsFragment.newInstance(isTwoPanel))
+                setFragment(PostsFragment.newInstance(isTwoPanel, userId))
 
             }
             R.id.menu_users -> {

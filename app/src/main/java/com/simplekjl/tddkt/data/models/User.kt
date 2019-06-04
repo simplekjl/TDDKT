@@ -14,6 +14,7 @@ class User() : Parcelable {
     var website: String? = null
     var company: Company = Company()
 
+
     constructor(parcel: Parcel) : this() {
         id = parcel.readInt()
         name = parcel.readString()
@@ -45,6 +46,10 @@ class User() : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+    fun getFullAddress(): String = address.suite + address.street + address.city + address.city
+
+    fun getCompanyDetails(): String = company.name + ""
 }
 
 

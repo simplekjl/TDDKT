@@ -1,23 +1,30 @@
 package com.simplekjl.tddkt.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.simplekjl.tddkt.R
+import com.simplekjl.tddkt.data.MainViewModel
+import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.databinding.FragmentUserProfileBinding
 
 class UserProfileFragment : BaseFragment() {
 
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnFragmentUserProfilenteractiion? = null
+    private var userId: Int = -1
+    private var isTwoPanel = false
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
+            userId = it.getInt("userId")
+            isTwoPanel = it.getBoolean("isTwoPanel")
         }
     }
 
@@ -25,8 +32,24 @@ class UserProfileFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile, container, false)
+        val binding: FragmentUserProfileBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_user_profile, container, false
+        )
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        showLoader()
+        viewModel.init()
+        //getting the user and passing it to the dataBinding
+        viewModel.getUserById(userId).observe(viewLifecycleOwner, Observer<User> {
+            binding.user = it
+            activity?.title = it.username
+        })
+
+        childFragmentManager.beginTransaction()
+            .replace(R.id.profile_fragment, PostsFragment.newInstance(isTwoPanel,userId))
+            .commit()
+
+        return binding.root
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -36,11 +59,11 @@ class UserProfileFragment : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement UsersFragmentInteractionListener")
-        }
+//        if (context is OnFragmentUserProfilenteractiion) {
+//            listener = context
+//        } else {
+//            throw RuntimeException(context.toString() + " must implement OnFragmentUserProfilenteractiion")
+//        }
     }
 
     override fun onDetach() {
@@ -48,38 +71,18 @@ class UserProfileFragment : BaseFragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+    interface OnFragmentUserProfilenteractiion {
+        fun onUserClicks()
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment UserProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(twoPanel: Boolean, userId: Int) =
             UserProfileFragment().apply {
                 arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
+                    this.putInt("userId", userId)
+                    this.putBoolean("isTwoPanel", twoPanel)
                 }
             }
     }

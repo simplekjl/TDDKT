@@ -5,4 +5,5 @@
     <color name="colorAccent">#E7C856</color>
     <color name="btnBackground">#00ffffff</color>
     <color name="card_background">#fafafa</color>
+    <color name="text_profile">#EBAAA8A8</color>
 </resources>
