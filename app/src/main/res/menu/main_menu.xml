@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/show_users" android:id="@+id/menu_users"/>
+    <item android:title="@string/show_latest_posts" android:id="@+id/menu_posts"/>
+    <item android:title="@string/close_app" android:id="@+id/menu_close"/>
+</menu>

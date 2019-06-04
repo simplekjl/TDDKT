@@ -7,4 +7,7 @@
     <string name="at">\@</string>
     <string name="select_a_post_to_see_the_comments">Select a post to see the comments</string>
     <string name="posts_title">Posts</string>
+    <string name="show_users">Show Users</string>
+    <string name="show_latest_posts">Show latest posts</string>
+    <string name="close_app">Close app</string>
 </resources>

@@ -2,10 +2,13 @@ package com.simplekjl.tddkt
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.simplekjl.tddkt.fragments.CommentsFragment
 import com.simplekjl.tddkt.fragments.PostsFragment
+import com.simplekjl.tddkt.fragments.UsersFragment
 
 
 class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragment {
@@ -30,19 +33,14 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
         val count = supportFragmentManager.backStackEntryCount
         if (isTwoPanel) {
             CommentsFragment.postIdObserver.value = -1
-            if (CommentsFragment.postIdObserver.value == -1){
+            if (CommentsFragment.postIdObserver.value == -1) {
                 super.onBackPressed()
             }
-        }
-        else{
-            if (count == 0) {
-                super.onBackPressed()
+        } else {
+            if (count == 1) {
+                finish()
             } else {
                 supportFragmentManager.popBackStack()
-                val f = supportFragmentManager.findFragmentById(R.id.fragment)
-                if (f != null) {
-                    updateTitleAndDrawer(f)
-                }
             }
         }
     }
@@ -51,7 +49,7 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment, newInstance)
             .addToBackStack(null)
-            .commit()
+            .commitAllowingStateLoss()
     }
 
     private fun setupTwoPanelView() {
@@ -79,14 +77,42 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
         }
     }
 
-    private fun updateTitleAndDrawer(fragment: Fragment) {
-        if (fragment is PostsFragment) {
-            supportActionBar?.title = "Posts"
-            title = getString(R.string.posts_title)
-            //set selected item position, etc
-        } else if (fragment is CommentsFragment) {
-            supportActionBar?.title = "Comments"
-            setTitle("Comments")
+    fun updateTitleAndDrawer(fragment: Fragment) {
+
+        when (fragment) {
+            is PostsFragment -> {
+                supportActionBar?.title = "Posts"
+                title = getString(R.string.posts_title)
+            }
+            is CommentsFragment -> {
+                supportActionBar?.title = "Comments"
+                title = "Comments"
+            }
+            is UsersFragment ->{
+                supportActionBar?.title = "User"
+                title = "Users"
+            }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menu_close -> {
+                finish()
+            }
+            R.id.menu_posts -> {
+                setFragment(PostsFragment.newInstance(isTwoPanel))
+
+            }
+            R.id.menu_users -> {
+                setFragment(UsersFragment.newInstance())
+            }
+        }
+        return true
     }
 }

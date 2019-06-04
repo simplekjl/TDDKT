@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.simplekjl.tddkt.R
 
-class UserProfileFragment : Fragment() {
+class UserProfileFragment : BaseFragment() {
 
     private var listener: OnFragmentInteractionListener? = null
 
@@ -29,7 +29,10 @@ class UserProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_user_profile, container, false)
     }
 
-
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        super.updateActivityTitle(this)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
