@@ -2,6 +2,7 @@ package com.simplekjl.tddkt.fragments
 
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.simplekjl.tddkt.MainActivity
 import kotlinx.android.synthetic.main.fragment_users.*
 
 abstract class BaseFragment : Fragment(){
@@ -23,5 +24,9 @@ abstract class BaseFragment : Fragment(){
         error_message.visibility = View.INVISIBLE
         rv_generic.visibility = View.VISIBLE
         progressBar.visibility = View.INVISIBLE
+    }
+
+    fun updateActivityTitle(fragment: Fragment){
+        (activity as? MainActivity)?.updateTitleAndDrawer(fragment)
     }
 }

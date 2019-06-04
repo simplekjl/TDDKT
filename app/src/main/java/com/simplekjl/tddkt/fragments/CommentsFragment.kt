@@ -77,6 +77,11 @@ class CommentsFragment : BaseFragment() {
         }
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        super.updateActivityTitle(this)
+    }
+
     override fun onDetach() {
         super.onDetach()
         listener = null

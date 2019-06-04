@@ -56,7 +56,11 @@ class PostsFragment : BaseFragment(), OnPostClicked {
 
     }
 
-
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        // place to update the view given the fragment lifecycle
+        super.updateActivityTitle(this)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
