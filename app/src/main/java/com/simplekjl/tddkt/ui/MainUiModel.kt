@@ -1,4 +1,4 @@
-package com.simplekjl.tddkt.data
+package com.simplekjl.tddkt.ui
 
 
 sealed class MainUiModel{

@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.PostAdapter
 import com.simplekjl.tddkt.adapters.PostAdapter.OnPostClicked
-import com.simplekjl.tddkt.data.MainViewModel
 import com.simplekjl.tddkt.data.models.Post
+import com.simplekjl.tddkt.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_users.*
 
 class PostsFragment : BaseFragment(), OnPostClicked {
@@ -21,6 +21,7 @@ class PostsFragment : BaseFragment(), OnPostClicked {
     private var isTwoPanel = false
     private var userId: Int = -1
     private var onInteractionPostFragment: OnInteractionPostFragment? = null
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ class PostsFragment : BaseFragment(), OnPostClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         showLoader()
         viewModel.init()
         if (userId != -1) {
@@ -63,7 +64,7 @@ class PostsFragment : BaseFragment(), OnPostClicked {
             showItems()
             val gridLayoutManager = GridLayoutManager(activity, 1)
             rv_generic.layoutManager = gridLayoutManager
-            val adapter = PostAdapter(it, viewLifecycleOwner, this)
+            val adapter = activity?.let { currentActivity -> PostAdapter(it, viewLifecycleOwner, this, currentActivity) }
             rv_generic.adapter = adapter
         }
     }
@@ -108,5 +109,10 @@ class PostsFragment : BaseFragment(), OnPostClicked {
                     this.putBoolean("isTwoPanel", twoPanel)
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clear()
     }
 }
