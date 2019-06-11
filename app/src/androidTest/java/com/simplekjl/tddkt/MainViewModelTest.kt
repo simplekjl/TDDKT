@@ -5,9 +5,9 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import com.simplekjl.tddkt.data.DataRepository
-import com.simplekjl.tddkt.data.MainUiModel
-import com.simplekjl.tddkt.data.MainViewModel
+import com.simplekjl.tddkt.data.Repository
+import com.simplekjl.tddkt.ui.MainUiModel
+import com.simplekjl.tddkt.viewModels.MainViewModel
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -36,7 +36,7 @@ class MainViewModelTest {
     lateinit var service: NetworkService
     //mocks
     private val viewStateObserver: Observer<MainUiModel> = mock()
-    private val mockDataRepository: DataRepository = mock()
+    private val mockDataRepository: Repository = mock()
     private val mainViewModel = MainViewModel()
 
     @Before

@@ -4,12 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.simplekjl.tddkt.MainActivity
 import com.simplekjl.tddkt.R
-import com.simplekjl.tddkt.data.Repository
+import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Post
+import com.simplekjl.tddkt.viewModels.MainViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.post_item.view.*
 import kotlin.random.Random
@@ -17,15 +21,17 @@ import kotlin.random.Random
 class PostAdapter(
     var posts: List<Post>,
     var viewLifecycleOwner: LifecycleOwner,
-    var listener: OnPostClicked
+    var listener: OnPostClicked,
+    var activity: FragmentActivity
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private lateinit var context: Context
-    private lateinit var repository: Repository
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        repository = Repository()
+        viewModel = ViewModelProviders.of(activity).get(MainViewModel::class.java)
+        viewModel.init()
         val view = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false)
         return ViewHolder(view)
     }
@@ -40,17 +46,18 @@ class PostAdapter(
 
 
     inner class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
-        private var repository: Repository = Repository()
+        private var repository: RepositoryImpl = RepositoryImpl()
         private val nextValues = List(10) { Random.nextInt(0, 100) }
         fun setItem(
             post: Post
         ) {
             view.post_title.text = post.title
             //get user data from the repository
-            repository.getUserById(post.userId).observe(viewLifecycleOwner, Observer {
+
+            viewModel.getUserById(post.userId).observe(viewLifecycleOwner, Observer {
                 view.post_username.text = it.name
             })
-            repository.getCommentsCountByPostId(post.id).observe(viewLifecycleOwner, Observer {
+            viewModel.getCommentsCountByPostId(post.id).observe(viewLifecycleOwner, Observer {
                 view.post_comments_count.text = it.toString()
             })
             view.post_body.text = post.body

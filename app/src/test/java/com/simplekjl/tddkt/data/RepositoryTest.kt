@@ -9,6 +9,8 @@ import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.network.NetworkService
+import com.simplekjl.tddkt.ui.MainUiModel
+import com.simplekjl.tddkt.viewModels.MainViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +29,7 @@ class RepositoryTest {
     lateinit var service: NetworkService
     //mocks
     private val viewStateObserver: Observer<MainUiModel> = mock()
-    private val mockDataRepository: DataRepository = mock()
+    private val mockDataRepository: Repository = mock()
     private val mainViewModel = MainViewModel()
 
     @Before

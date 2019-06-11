@@ -131,4 +131,5 @@ class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragmen
         }
         return true
     }
+
 }

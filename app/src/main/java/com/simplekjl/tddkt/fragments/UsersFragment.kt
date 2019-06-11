@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.UserAdapter
-import com.simplekjl.tddkt.data.MainViewModel
 import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_users.*
 
 
@@ -19,6 +19,7 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
 
     private var onUserFragmentListener: OnUsersFragmentListener? = null
+    private lateinit var viewModel: MainViewModel
 
     //private var listener: UsersFragmentInteractionListener? = null
 
@@ -32,7 +33,7 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         viewModel.init()
         //avoid leaks using the lifecycle of the fragment
@@ -88,6 +89,11 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 //                    putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clear()
     }
 
 }

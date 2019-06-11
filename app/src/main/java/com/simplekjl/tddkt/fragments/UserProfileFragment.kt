@@ -9,9 +9,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.simplekjl.tddkt.R
-import com.simplekjl.tddkt.data.MainViewModel
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.databinding.FragmentUserProfileBinding
+import com.simplekjl.tddkt.viewModels.MainViewModel
 
 class UserProfileFragment : BaseFragment() {
 
@@ -46,7 +46,7 @@ class UserProfileFragment : BaseFragment() {
         })
 
         childFragmentManager.beginTransaction()
-            .replace(R.id.profile_fragment, PostsFragment.newInstance(isTwoPanel,userId))
+            .replace(R.id.profile_fragment, PostsFragment.newInstance(isTwoPanel, userId))
             .commit()
 
         return binding.root
@@ -85,5 +85,10 @@ class UserProfileFragment : BaseFragment() {
                     this.putBoolean("isTwoPanel", twoPanel)
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clear()
     }
 }
