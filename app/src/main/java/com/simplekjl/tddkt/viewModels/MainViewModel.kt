@@ -84,7 +84,6 @@ class MainViewModel(repository: Repository) : ViewModel() {
                     { user -> data.value = user },
                     { data.value = null })
         )
-
         return data
     }
 
