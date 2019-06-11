@@ -1,11 +1,9 @@
 package com.simplekjl.tddkt.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.simplekjl.tddkt.RxImmediateSchedulerRule
 import com.simplekjl.tddkt.data.Repository
 import com.simplekjl.tddkt.data.models.Comment
@@ -61,9 +59,19 @@ class MainViewModelTest {
 
     @Test
     fun setCompositeDisposable() {
-        val compositeDisposable: CompositeDisposable = CompositeDisposable()
+        val compositeDisposable = CompositeDisposable()
         viewModel.compositeDisposable = compositeDisposable
         assertNotNull(viewModel.compositeDisposable)
+    }
+
+    @Test
+    fun getUsers_giveBackLivedData() {
+        whenever(mockRepository.getUsers())
+            .thenReturn(Observable.just(arrayListOf(User(),User())))
+
+        viewModel.getUsers().observeForever(mockLiveDataObserver)
+
+        assertNotNull(viewModel.getUsers())
     }
 
     @Test

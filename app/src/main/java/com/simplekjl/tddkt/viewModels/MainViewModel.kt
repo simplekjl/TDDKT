@@ -12,10 +12,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 
-class MainViewModel(repository: Repository) : ViewModel() {
+class MainViewModel(var repository: Repository) : ViewModel() {
 
     var compositeDisposable: CompositeDisposable
-    var repository: Repository = repository
 
     init {
         repository.init()
