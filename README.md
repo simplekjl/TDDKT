@@ -45,7 +45,7 @@ Used of the ViewHolder pattern to populate views for Posts, Users, Comments.
 Use of Fragments to allow flexibility for showing different types of views. 
 Further work would be to show the UserProfileFragment with its related post in a master detail view.
 
-#The use off TDD as part of the development of the features.
+# The use off TDD as part of the development of the features.
 
 The technique TDD was used to develop some of the features.
 - Arrange
@@ -53,10 +53,11 @@ The technique TDD was used to develop some of the features.
 - Assert
 - UI Tests: 10% Integration Tests: 20% Unit Tests: 70%
 
-CI status
-![](https://travis-ci.com/simplekjl/TDDKT.svg?token=byDRpxJMeyFHQg8a28sg&branch=master)
+# CircleCI
+[![CircleCI](https://circleci.com/gh/simplekjl/TDDKT/tree/master.svg?style=svg)](https://circleci.com/gh/simplekjl/TDDKT/tree/master)
 
 
-#ICONS PROVIDED BY FONT AWESOME
+# ICONS PROVIDED BY FONT AWESOME
+
 Link to the license
 https://fontawesome.com/license
