@@ -9,14 +9,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "testing-ktx/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+          command: sudo chmod +x ./gradlew
       - run:
           name: Get Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
           paths:
             - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "testing-ktx/build.gradle" }}
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Run Tests
           command: ./gradlew lint test
@@ -24,9 +27,9 @@ jobs:
           path: testing/build/reports
           destination: testing/reports
       - store_artifacts:
-          path: testing-ktx/build/reports
-          destination: testing-ktx/reports
+          path: app/build/reports
+          destination: app/reports
       - store_test_results:
           path: testing/build/test-results
       - store_test_results:
-          path: testing-ktx/build/test-results
+          path: app/build/test-results
