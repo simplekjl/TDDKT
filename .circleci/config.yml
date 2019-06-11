@@ -11,8 +11,8 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "testing-ktx/build.gradle" }}
       - run:
-          name: Get Dependencies
-          command: ./gradlew androidDependencies
+        name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+        command: sudo chmod +x ./gradlew
       - save_cache:
           paths:
             - ~/.gradle
