@@ -9,11 +9,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import com.simplekjl.tddkt.MainActivity
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.viewModels.MainViewModel
+import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.post_item.view.*
 import kotlin.random.Random
@@ -30,7 +30,7 @@ class PostAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        viewModel = ViewModelProviders.of(activity).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
 //        viewModel.init()
         val view = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false)
         return ViewHolder(view)
