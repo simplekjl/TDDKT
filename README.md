@@ -1,3 +1,6 @@
+# CircleCI
+[![CircleCI](https://circleci.com/gh/simplekjl/TDDKT/tree/master.svg?style=svg)](https://circleci.com/gh/simplekjl/TDDKT/tree/master)
+
 ### Features
 
 - Show Posts.
@@ -52,9 +55,6 @@ The technique TDD was used to develop some of the features.
 - Act
 - Assert
 - UI Tests: 10% Integration Tests: 20% Unit Tests: 70%
-
-# CircleCI
-[![CircleCI](https://circleci.com/gh/simplekjl/TDDKT/tree/master.svg?style=svg)](https://circleci.com/gh/simplekjl/TDDKT/tree/master)
 
 
 # ICONS PROVIDED BY FONT AWESOME
