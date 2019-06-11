@@ -10,4 +10,7 @@
     <string name="show_users">Show Users</string>
     <string name="show_latest_posts">Show latest posts</string>
     <string name="close_app">Close app</string>
+    <string name="welcome">Welcome</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="this_is_an_example_of_a_welcome_screen">This is an example of a welcome screen</string>
 </resources>
