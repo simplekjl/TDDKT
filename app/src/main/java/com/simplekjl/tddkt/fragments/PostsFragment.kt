@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.PostAdapter
 import com.simplekjl.tddkt.adapters.PostAdapter.OnPostClicked
+import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.viewModels.MainViewModel
+import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_users.*
 
 class PostsFragment : BaseFragment(), OnPostClicked {
@@ -41,9 +43,9 @@ class PostsFragment : BaseFragment(), OnPostClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
         showLoader()
-        viewModel.init()
+//        viewModel.init()
         if (userId != -1) {
             viewModel.getPostsByUserID(userId).observe(viewLifecycleOwner, Observer<List<Post>> {
                 setAdapter(it)
@@ -64,7 +66,8 @@ class PostsFragment : BaseFragment(), OnPostClicked {
             showItems()
             val gridLayoutManager = GridLayoutManager(activity, 1)
             rv_generic.layoutManager = gridLayoutManager
-            val adapter = activity?.let { currentActivity -> PostAdapter(it, viewLifecycleOwner, this, currentActivity) }
+            val adapter =
+                activity?.let { currentActivity -> PostAdapter(it, viewLifecycleOwner, this, currentActivity) }
             rv_generic.adapter = adapter
         }
     }

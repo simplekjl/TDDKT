@@ -13,7 +13,7 @@ class RepositoryImpl : Repository {
     private lateinit var cache : CacheImpl
     private lateinit var network : NetworkImpl
 
-    fun init(){
+    override fun init(){
         cache = CacheImpl()
         cache.init()
         network = NetworkImpl()
@@ -33,10 +33,10 @@ class RepositoryImpl : Repository {
 
     override fun getUserById(userId: Int): Observable<User> {
         //checking from Cache
-        if(cache.getUserId(userId)!= null){
-            return Observable.create { it.onNext(cache.getUserId(userId) as User) }
+        return if(cache.getUserId(userId)!= null){
+            Observable.create { it.onNext(cache.getUserId(userId) as User) }
         }else{
-            return network.getUserById(userId)
+            network.getUserById(userId)
         }
     }
 
