@@ -8,6 +8,7 @@ import io.reactivex.Observable
 /** Communication layer to pass data **/
 
 interface Repository {
+    fun init()
     //Comments
     fun getComments(): Observable<List<Comment>>
 

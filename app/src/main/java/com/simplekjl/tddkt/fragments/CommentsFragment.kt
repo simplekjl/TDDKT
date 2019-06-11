@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.CommentAdapter
+import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.viewModels.MainViewModel
+import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_users.*
 
 class CommentsFragment : BaseFragment() {
@@ -44,9 +46,9 @@ class CommentsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
         showLoader()
-        viewModel.init()
+//        viewModel.init()
         if (isTwoPanel) {
             showErrorMessage("Click any post to see the comments")
             postIdObserver.observe(viewLifecycleOwner, Observer {

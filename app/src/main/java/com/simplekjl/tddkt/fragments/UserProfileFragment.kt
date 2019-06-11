@@ -9,9 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.simplekjl.tddkt.R
+import com.simplekjl.tddkt.data.Repository
+import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.databinding.FragmentUserProfileBinding
 import com.simplekjl.tddkt.viewModels.MainViewModel
+import com.simplekjl.tddkt.viewModels.ViewModelFactory
 
 class UserProfileFragment : BaseFragment() {
 
@@ -36,9 +39,9 @@ class UserProfileFragment : BaseFragment() {
             inflater,
             R.layout.fragment_user_profile, container, false
         )
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this,ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
         showLoader()
-        viewModel.init()
+//        viewModel.init()
         //getting the user and passing it to the dataBinding
         viewModel.getUserById(userId).observe(viewLifecycleOwner, Observer<User> {
             binding.user = it

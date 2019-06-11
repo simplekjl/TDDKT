@@ -31,7 +31,7 @@ class PostAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
         viewModel = ViewModelProviders.of(activity).get(MainViewModel::class.java)
-        viewModel.init()
+//        viewModel.init()
         val view = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false)
         return ViewHolder(view)
     }

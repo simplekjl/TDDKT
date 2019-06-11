@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.UserAdapter
+import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.viewModels.MainViewModel
+import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_users.*
 
 
@@ -33,9 +35,8 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
 
-        viewModel.init()
         //avoid leaks using the lifecycle of the fragment
         viewModel.getUsers().observe(viewLifecycleOwner, Observer<List<User>> {
             val linearLayoutManager = LinearLayoutManager(activity)
