@@ -48,7 +48,7 @@ Used of the ViewHolder pattern to populate views for Posts, Users, Comments.
 Use of Fragments to allow flexibility for showing different types of views. 
 Further work would be to show the UserProfileFragment with its related post in a master detail view.
 
-# The use off TDD as part of the development of the features.
+# TDD
 
 The technique TDD was used to develop some of the features.
 - Arrange
