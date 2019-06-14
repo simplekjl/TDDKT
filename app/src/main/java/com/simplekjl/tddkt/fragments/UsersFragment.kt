@@ -10,13 +10,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.UserAdapter
 import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.ui.ErrorMessage
+import com.simplekjl.tddkt.ui.Loading
+import com.simplekjl.tddkt.ui.Success
+import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_users.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
-
 
     private var onUserFragmentListener: OnUsersFragmentListener? = null
     private val viewModel: MainViewModel by viewModel()
@@ -33,13 +36,9 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         //avoid leaks using the lifecycle of the fragment
-        viewModel.getUsers().observe(viewLifecycleOwner, Observer<List<User>> {
-            val linearLayoutManager = LinearLayoutManager(activity)
-            rv_generic.layoutManager = linearLayoutManager
-            val adapter = UserAdapter(it, this)
-            rv_generic.adapter = adapter
+        viewModel.getUsers().observe(viewLifecycleOwner, Observer<UiState> { state ->
+            render(state)
         })
     }
 
@@ -66,6 +65,28 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
         } else {
             throw RuntimeException(context.toString() + " must implement OnUsersFragmentListener ")
         }
+    }
+
+    override fun render(state: UiState) {
+        when (state) {
+            is Loading -> {
+                showLoader()
+            }
+            is ErrorMessage -> {
+                showErrorMessage(state.msg)
+            }
+            is Success<*> -> {
+                showItems()
+                createAdapter(state.data as List<User>)
+            }
+        }
+    }
+
+    private fun createAdapter(data: List<User>) {
+        val linearLayoutManager = LinearLayoutManager(activity)
+        rv_generic.layoutManager = linearLayoutManager
+        val adapter = UserAdapter(data, this)
+        rv_generic.adapter = adapter
     }
 
     override fun onDetach() {

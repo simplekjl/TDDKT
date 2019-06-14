@@ -19,7 +19,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
                 }
 
                 override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                    emitter.onNext(0)
+                    emitter.onError(t)
                 }
             })
         }
@@ -31,7 +31,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
             networkService.getUserById(userId).enqueue(object : Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     // in case is e,pty return default
-                    emitter.onNext(User())
+                    emitter.onError(t)
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -45,7 +45,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
         return Observable.create { emitter ->
             networkService.getPosts().enqueue(object : Callback<List<Post>> {
                 override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                    emitter.onNext(emptyList())
+                    emitter.onError(t)
                 }
 
                 override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
@@ -61,7 +61,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
             //Network
             networkService.getUsers().enqueue(object : Callback<List<User>> {
                 override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                    emitter.onNext(emptyList())
+                    emitter.onError(t)
                 }
 
                 override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
@@ -76,7 +76,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
             //Network
             networkService.getComments().enqueue(object : Callback<List<Comment>> {
                 override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                    emitter.onNext(emptyList())
+                    emitter.onError(t)
                 }
 
                 override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
@@ -92,7 +92,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
             //Network
             networkService.getPostsByUserId(userId).enqueue(object : Callback<List<Post>> {
                 override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                    emitter.onNext(emptyList())
+                    emitter.onError(t)
                 }
                 override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                     emitter.onNext(response.body() ?: emptyList())
@@ -106,7 +106,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
             //Network
             networkService.getComments().enqueue(object : Callback<List<Comment>> {
                 override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                    emitter.onNext(emptyList())
+                    emitter.onError(t)
                 }
                 override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                     emitter.onNext(response.body() ?: emptyList())

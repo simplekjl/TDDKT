@@ -10,10 +10,14 @@ import androidx.lifecycle.Observer
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.databinding.FragmentUserProfileBinding
+import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserProfileFragment : BaseFragment() {
+    override fun render(state: UiState) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var listener: OnFragmentUserProfilenteractiion? = null
     private var userId: Int = -1

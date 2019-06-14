@@ -10,11 +10,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.CommentAdapter
 import com.simplekjl.tddkt.data.models.Comment
+import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_users.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CommentsFragment : BaseFragment() {
+    override fun render(state: UiState) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private var listener: CommentAdapter.OnCommentClicked? = null
     private var postId: Int = 0

@@ -7,22 +7,28 @@ import com.simplekjl.tddkt.data.Repository
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.ui.ErrorMessage
+import com.simplekjl.tddkt.ui.Loading
+import com.simplekjl.tddkt.ui.Success
+import com.simplekjl.tddkt.ui.UiState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-
 
 class MainViewModel(var repository: Repository) : ViewModel() {
 
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun getUsers(): LiveData<List<User>> {
-        val data: MutableLiveData<List<User>> = MutableLiveData()
+    fun getUsers(): LiveData<UiState> {
+//        List<User>
+        val data: MutableLiveData<UiState> = MutableLiveData()
         compositeDisposable.add(
             repository.getUsers().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(
-                    { listUsers -> data.value = listUsers },
-                    { data.value = emptyList() })
+                    { listUsers -> data.value = Success(listUsers as List<User>) },
+                    { data.value = ErrorMessage("") },
+                    { /* On Complete */},
+                    { data.value = Loading })
         )
         return data
 
