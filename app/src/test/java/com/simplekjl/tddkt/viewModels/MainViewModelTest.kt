@@ -3,14 +3,14 @@ package com.simplekjl.tddkt.viewModels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.simplekjl.tddkt.RxImmediateSchedulerRule
 import com.simplekjl.tddkt.data.Repository
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.ui.ErrorMessage
+import com.simplekjl.tddkt.ui.Success
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.junit.Assert.*
@@ -84,20 +84,19 @@ class MainViewModelTest {
             .thenReturn(Observable.just(list))
 //            .thenReturn(Observable.create { emitter -> emitter.onNext(list)})
         //fire the test method
-        viewModel.getUsers()
-        assertEquals(list, viewModel.getUsers().value)
+        val result = viewModel.getUsers().value as Success<*>
+        assertEquals(list, result.data)
 
     }
 
     @Test
     fun `Given that Repository return Exception, when getUsers() called, then emptyList() in live Data`() {
-        val list: List<User> = emptyList()
+
         whenever(mockRepository.getUsers())
             .thenReturn(Observable.error(Throwable()))
-        viewModel.getUsers().observeForever(mockLiveDataObserver)
+        val result = viewModel.getUsers().value as ErrorMessage
         //assert
-        verify(mockLiveDataObserver, times(1))
-            .onChanged(list)
+        assertNotNull(result)
 
     }
 
@@ -132,30 +131,34 @@ class MainViewModelTest {
     fun `When getCommentsByPostId() called and it returns data to live data`() {
         val list: List<Comment> = arrayListOf(Comment(), Comment())
         whenever(mockRepository.getCommentsByPostId(1)).thenReturn(Observable.just(list))
-
-        assertEquals(list, viewModel.getCommentsByPostId(1).value)
+        val state = viewModel.getCommentsByPostId(1).value as Success<*>
+        assertEquals(list, state.data)
     }
 
     @Test
-    fun `When getCommentsByPostId() called and it emptyList data to live data`() {
-        val list: List<Comment> = emptyList()
+    fun `When getCommentsByPostId() called and return error `() {
         whenever(mockRepository.getCommentsByPostId(1)).thenReturn(Observable.error(Throwable()))
-        assertEquals(list, viewModel.getCommentsByPostId(1).value)
+        val state = viewModel.getCommentsByPostId(1).value as ErrorMessage
+        //assert
+        assertNotNull(state)
     }
 
     @Test
     fun `When getUserById() is called and it replies with an User to Live Data`() {
         val user = User()
         whenever(mockRepository.getUserById(123)).thenReturn(Observable.just(user))
+        val result = viewModel.getUserById(123).value as Success<*>
         // assert
-        assertEquals(user, viewModel.getUserById(123).value)
+        assertEquals(user, result.data as User)
     }
 
     @Test
     fun `When getUserById() is called and returns onError with an empty User`() {
         whenever(mockRepository.getUserById(123)).thenReturn(Observable.error(Throwable()))
+        val result = viewModel.getUserById(123).value as ErrorMessage
+
         // assert
-        assertEquals(null, viewModel.getUserById(123).value)
+        assertNotNull(result)
     }
 
     @Test
