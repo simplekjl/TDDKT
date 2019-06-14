@@ -7,13 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.simplekjl.tddkt.R
-import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.post_item.view.*
 import kotlin.random.Random
@@ -22,16 +19,14 @@ class PostAdapter(
     var posts: List<Post>,
     var viewLifecycleOwner: LifecycleOwner,
     var listener: OnPostClicked,
+    val viewModel: MainViewModel,
     var activity: FragmentActivity
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private lateinit var context: Context
-    private lateinit var viewModel: MainViewModel
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         context = parent.context
-        viewModel = ViewModelProviders.of(activity, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
-//        viewModel.init()
         val view = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false)
         return ViewHolder(view)
     }
@@ -46,7 +41,6 @@ class PostAdapter(
 
 
     inner class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
-        private var repository: RepositoryImpl = RepositoryImpl()
         private val nextValues = List(10) { Random.nextInt(0, 100) }
         fun setItem(
             post: Post

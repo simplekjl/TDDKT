@@ -12,9 +12,9 @@ import com.simplekjl.tddkt.fragments.UserProfileFragment
 import com.simplekjl.tddkt.fragments.UsersFragment
 
 
-class MainActivity : AppCompatActivity(), PostsFragment.OnInteractionPostFragment,
+class MainActivity : AppCompatActivity(),
+    PostsFragment.OnInteractionPostFragment,
     UsersFragment.OnUsersFragmentListener {
-
 
     private var isTwoPanel = false
     private var userId: Int = -1

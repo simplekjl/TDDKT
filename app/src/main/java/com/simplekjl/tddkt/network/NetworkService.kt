@@ -4,8 +4,6 @@ import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -37,18 +35,4 @@ interface NetworkService {
     @GET("users/{id}")
     fun getUserById(@Path("id") userId: Int): Call<User>
 
-
-    /**
-     * Companion object to create the GithubApiService
-     */
-    companion object Factory {
-        fun create(): NetworkService {
-            val retrofit = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://jsonplaceholder.typicode.com/")
-                .build()
-
-            return retrofit.create(NetworkService::class.java)
-        }
-    }
 }
