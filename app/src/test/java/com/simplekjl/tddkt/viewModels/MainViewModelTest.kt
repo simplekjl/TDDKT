@@ -1,9 +1,11 @@
 package com.simplekjl.tddkt.viewModels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import com.simplekjl.tddkt.RxImmediateSchedulerRule
 import com.simplekjl.tddkt.data.Repository
 import com.simplekjl.tddkt.data.models.Comment
@@ -30,7 +32,7 @@ class MainViewModelTest {
     @Mock
     lateinit var mockLiveDataObserver: Observer<Any>
 
-    var mockRepository: Repository = mock()
+    private var mockRepository: Repository = mock()
 
     lateinit var viewModel: MainViewModel
 
@@ -67,7 +69,7 @@ class MainViewModelTest {
     @Test
     fun getUsers_giveBackLivedData() {
         whenever(mockRepository.getUsers())
-            .thenReturn(Observable.just(arrayListOf(User(),User())))
+            .thenReturn(Observable.just(arrayListOf(User(), User())))
 
         viewModel.getUsers().observeForever(mockLiveDataObserver)
 
@@ -151,7 +153,6 @@ class MainViewModelTest {
 
     @Test
     fun `When getUserById() is called and returns onError with an empty User`() {
-        val user = null
         whenever(mockRepository.getUserById(123)).thenReturn(Observable.error(Throwable()))
         // assert
         assertEquals(null, viewModel.getUserById(123).value)
