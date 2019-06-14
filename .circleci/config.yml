@@ -6,35 +6,39 @@ jobs:
       - image: circleci/android:api-28-alpha
     environment:
       JVM_OPTS: -Xmx4096m
-      dependencies:
-      override:
-        echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
-        echo y | android update sdk --no-ui --all --filter "android-29, build-tools-29.0.0"
-        echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "/opt/android-sdk-linux/licenses/android-sdk-license"
     steps:
       - checkout
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-          command: sudo chmod +x ./gradlew
-      - run:
-          name: Get Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run Tests
-          command: ./gradlew lint test
-      - store_artifacts:
-          path: testing/build/reports
-          destination: testing/reports
-      - store_artifacts:
-          path: app/build/reports
-          destination: app/reports
-      - store_test_results:
-          path: testing/build/test-results
-      - store_test_results:
-          path: app/build/test-results
+      -run:
+        name: Installing Platform Tools and Tools
+        command: echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
+      -run:
+        name: Installing Android 29
+        command: echo y | android update sdk --no-ui --all --filter "android-29, build-tools-29.0.0"
+       -run:
+        name: Accepting Licenses
+        command: echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "/opt/android-sdk-linux/licenses/android-sdk-license"
+        - run:
+            name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+            command: sudo chmod +x ./gradlew
+        - run:
+            name: Get Dependencies
+            command: ./gradlew androidDependencies
+        - save_cache:
+            paths:
+              - ~/.gradle
+            key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+        - run:
+            name: Run Tests
+            command: ./gradlew lint test
+        - store_artifacts:
+            path: testing/build/reports
+            destination: testing/reports
+        - store_artifacts:
+            path: app/build/reports
+            destination: app/reports
+        - store_test_results:
+            path: testing/build/test-results
+        - store_test_results:
+            path: app/build/test-results
