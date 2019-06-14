@@ -10,6 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.data.models.Post
+import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.ui.Success
+import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.post_item.view.*
@@ -48,8 +51,9 @@ class PostAdapter(
             view.post_title.text = post.title
             //get user data from the repository
 
-            viewModel.getUserById(post.userId).observe(viewLifecycleOwner, Observer {
-                view.post_username.text = it.name
+            viewModel.getUserById(post.userId).observe(viewLifecycleOwner, Observer { state ->
+                render(state)
+
             })
             viewModel.getCommentsCountByPostId(post.id).observe(viewLifecycleOwner, Observer {
                 view.post_comments_count.text = it.toString()
@@ -62,7 +66,17 @@ class PostAdapter(
                 listener.onPostClicked(post.id)
             }
         }
+
+        private fun render(state: UiState) {
+            when (state) {
+                is Success<*> -> {
+                    val user = state.data as User
+                    view.post_username.text = user.name
+                }
+            }
+        }
     }
+
 
     interface OnPostClicked {
         fun onPostClicked(postId: Int)

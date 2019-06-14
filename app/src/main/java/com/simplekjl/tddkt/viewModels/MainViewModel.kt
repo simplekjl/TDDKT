@@ -27,7 +27,7 @@ class MainViewModel(var repository: Repository) : ViewModel() {
                 .subscribeOn(Schedulers.io()).subscribe(
                     { listUsers -> data.value = Success(listUsers as List<User>) },
                     { data.value = ErrorMessage("") },
-                    { /* On Complete */},
+                    { /* On Complete */ },
                     { data.value = Loading })
         )
         return data
@@ -63,26 +63,29 @@ class MainViewModel(var repository: Repository) : ViewModel() {
         return data
     }
 
-    fun getCommentsByPostId(postId: Int): LiveData<List<Comment>> {
-        val data: MutableLiveData<List<Comment>> = MutableLiveData()
+    fun getCommentsByPostId(postId: Int): LiveData<UiState> {
+        val data: MutableLiveData<UiState> = MutableLiveData()
         compositeDisposable.add(
             repository.getCommentsByPostId(postId).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io()).subscribe({ listComments ->
-                    data.value = listComments
-                }, { data.value = emptyList() })
+                .subscribeOn(Schedulers.io()).subscribe(
+                    { listComments -> data.value = Success(listComments as List<Comment>) },
+                    { t: Throwable -> data.value = ErrorMessage("Something went wrong ") },
+                    { /** complete action **/ },
+                    { data.value = Loading })
         )
 
         return data
     }
 
-    fun getUserById(userId: Int): LiveData<User> {
-        val data: MutableLiveData<User> = MutableLiveData()
-
+    fun getUserById(userId: Int): LiveData<UiState> {
+        val data: MutableLiveData<UiState> = MutableLiveData()
         compositeDisposable.add(
             repository.getUserById(userId).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(
-                    { user -> data.value = user },
-                    { data.value = null })
+                    { user -> data.value = Success(user) },
+                    { t: Throwable -> data.value = ErrorMessage("Something went wrong ") },
+                    { /** complete action **/ },
+                    { data.value = Loading })
         )
         return data
     }

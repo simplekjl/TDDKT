@@ -10,6 +10,7 @@ package com.simplekjl.tddkt.ui
 
 sealed class UiState
 
+object TwoPanelView : UiState()
 object Loading : UiState()
 
 data class Success<T>(val data: T): UiState()

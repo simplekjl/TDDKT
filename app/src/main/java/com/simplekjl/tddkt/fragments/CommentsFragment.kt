@@ -10,15 +10,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.CommentAdapter
 import com.simplekjl.tddkt.data.models.Comment
-import com.simplekjl.tddkt.ui.UiState
+import com.simplekjl.tddkt.ui.*
 import com.simplekjl.tddkt.viewModels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_users.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CommentsFragment : BaseFragment() {
-    override fun render(state: UiState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 
     private var listener: CommentAdapter.OnCommentClicked? = null
     private var postId: Int = 0
@@ -51,33 +49,48 @@ class CommentsFragment : BaseFragment() {
         showLoader()
 //        viewModel.init()
         if (isTwoPanel) {
-            showErrorMessage("Click any post to see the comments")
-            postIdObserver.observe(viewLifecycleOwner, Observer {
-                setupView(it)
-            })
+            render(TwoPanelView)
+
         } else {
-            setupView(postId)
+            updateViewWithNewId(postId)
         }
 
     }
 
-    fun setupView(postId: Int) {
-        if (postId == -1) {
-            showErrorMessage("Click any post to see the comments")
-        } else {
-            //avoid leaks using the lifecycle of the fragment
-            viewModel.getCommentsByPostId(postId).observe(viewLifecycleOwner, Observer<List<Comment>> {
-                if (it.isEmpty()) {
-                    showErrorMessage("There is no comments to show")
-                } else {
-                    showItems()
-                    val gridLayoutManager = GridLayoutManager(activity, 1)
-                    rv_generic.layoutManager = gridLayoutManager
-                    val adapter = CommentAdapter(it, listener)
-                    rv_generic.adapter = adapter
-                }
-            })
+    private fun updateViewWithNewId(id: Int) {
+        viewModel.getCommentsByPostId(id).observe(viewLifecycleOwner, Observer<UiState> { state ->
+            render(state)
+        })
+    }
+
+    override fun render(state: UiState) {
+        when (state) {
+            is TwoPanelView -> {
+                showErrorMessage("Click any post to see more results")
+                postIdObserver.observe(viewLifecycleOwner, Observer {
+                    updateViewWithNewId(it)
+                })
+            }
+            is Loading -> {
+                showLoader()
+            }
+            is Success<*> -> {
+                showItems()
+                val list = state.data as List<Comment>
+                setAdapter(list)
+            }
+            is ErrorMessage -> {
+                showErrorMessage(state.msg)
+            }
         }
+    }
+
+    private fun setAdapter(comments: List<Comment>) {
+        val gridLayoutManager = GridLayoutManager(activity, 1)
+        rv_generic.layoutManager = gridLayoutManager
+        val adapter = CommentAdapter(comments, listener)
+        rv_generic.adapter = adapter
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

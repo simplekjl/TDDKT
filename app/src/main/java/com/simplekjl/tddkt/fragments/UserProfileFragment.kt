@@ -10,19 +10,19 @@ import androidx.lifecycle.Observer
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.databinding.FragmentUserProfileBinding
+import com.simplekjl.tddkt.ui.ErrorMessage
+import com.simplekjl.tddkt.ui.Loading
+import com.simplekjl.tddkt.ui.Success
 import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserProfileFragment : BaseFragment() {
-    override fun render(state: UiState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     private var listener: OnFragmentUserProfilenteractiion? = null
     private var userId: Int = -1
     private var isTwoPanel = false
     private val viewModel: MainViewModel by viewModel()
+    private lateinit var binding: FragmentUserProfileBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +36,13 @@ class UserProfileFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentUserProfileBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_user_profile, container, false
-        )
-        showLoader()
-//        viewModel.init()
+            R.layout.fragment_user_profile, container, false)
         //getting the user and passing it to the dataBinding
-        viewModel.getUserById(userId).observe(viewLifecycleOwner, Observer<User> {
-            binding.user = it
-            activity?.title = it.username
+        viewModel.getUserById(userId).observe(viewLifecycleOwner, Observer<UiState> {state ->
+            render(state)
+
         })
 
         childFragmentManager.beginTransaction()
@@ -68,6 +65,23 @@ class UserProfileFragment : BaseFragment() {
 //            throw RuntimeException(context.toString() + " must implement OnFragmentUserProfilenteractiion")
 //        }
     }
+
+    override fun render(state: UiState) {
+        when (state) {
+            is Loading -> {
+                showLoader()
+            }
+            is ErrorMessage -> {
+                showErrorMessage(state.msg)
+            }
+            is Success<*> -> {
+                val user = state.data as User
+                binding.user = user
+                activity?.title = user.username
+            }
+        }
+    }
+
 
     override fun onDetach() {
         super.onDetach()

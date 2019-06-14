@@ -18,9 +18,7 @@ import kotlinx.android.synthetic.main.fragment_users.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PostsFragment : BaseFragment(), OnPostClicked {
-    override fun render(state: UiState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+
 
     private var isTwoPanel = false
     private var userId: Int = -1
@@ -79,6 +77,10 @@ class PostsFragment : BaseFragment(), OnPostClicked {
                 }
             rv_generic.adapter = adapter
         }
+    }
+
+    override fun render(state: UiState) {
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
