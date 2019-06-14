@@ -8,16 +8,7 @@ import io.reactivex.Observable
 /**
  *  Repository decides where to take data, it can be Database, Cache or Network
  */
-class RepositoryImpl : Repository {
-
-    private lateinit var cache : CacheImpl
-    private lateinit var network : NetworkImpl
-
-    override fun init(){
-        cache = CacheImpl()
-        cache.init()
-        network = NetworkImpl()
-    }
+class RepositoryImpl constructor(private val cache: Cache, private val network: Network) : Repository {
 
     override fun getComments(): Observable<List<Comment>> {
         return network.getComments()
@@ -33,9 +24,9 @@ class RepositoryImpl : Repository {
 
     override fun getUserById(userId: Int): Observable<User> {
         //checking from Cache
-        return if(cache.getUserId(userId)!= null){
-            Observable.create { it.onNext(cache.getUserId(userId) as User) }
-        }else{
+        return if (cache.getUserId(userId).name != null) {
+            Observable.create { it.onNext(cache.getUserId(userId)) }
+        } else {
             network.getUserById(userId)
         }
     }

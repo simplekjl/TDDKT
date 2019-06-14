@@ -14,12 +14,7 @@ import io.reactivex.schedulers.Schedulers
 
 class MainViewModel(var repository: Repository) : ViewModel() {
 
-    var compositeDisposable: CompositeDisposable
-
-    init {
-        repository.init()
-        compositeDisposable = CompositeDisposable()
-    }
+    var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun getUsers(): LiveData<List<User>> {
         val data: MutableLiveData<List<User>> = MutableLiveData()

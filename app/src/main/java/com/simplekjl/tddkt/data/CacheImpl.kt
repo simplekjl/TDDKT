@@ -4,17 +4,13 @@ import com.simplekjl.tddkt.data.models.User
 
 class CacheImpl : Cache {
     //cache
-    private lateinit var userCache: Map<Int, User>
+    private var userCache: Map<Int, User> = emptyMap()
 
-    fun init() {
-        userCache = emptyMap()
-    }
+    override fun getUserId(userId: Int): User {
 
-    fun getUserId(userId: Int): User? {
-        val user: User? = null
         if (userCache[userId] != null) {
-            userCache[userId]
+           return  userCache[userId] as User
         }
-        return user
+        return User()
     }
 }

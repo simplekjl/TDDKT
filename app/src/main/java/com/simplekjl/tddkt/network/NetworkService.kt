@@ -42,6 +42,7 @@ interface NetworkService {
      * Companion object to create the GithubApiService
      */
     companion object Factory {
+        const val  BASE_URL = "https://jsonplaceholder.typicode.com/"
         fun create(): NetworkService {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
