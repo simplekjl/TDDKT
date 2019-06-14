@@ -83,7 +83,7 @@ class MainViewModel(var repository: Repository) : ViewModel() {
             repository.getUserById(userId).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(
                     { user -> data.value = Success(user) },
-                    { t: Throwable -> data.value = ErrorMessage("Something went wrong ") },
+                    { t: Throwable -> data.value = ErrorMessage("Something went wrong") },
                     { /** complete action **/ },
                     { data.value = Loading })
         )
