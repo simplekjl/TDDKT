@@ -17,9 +17,6 @@ jobs:
           name: Installing Android 29
           command: echo y | android update sdk --no-ui --all --filter "android-29, build-tools-29.0.0"
       - run:
-          name: Accepting Licenses
-          command: echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "/opt/android-sdk-linux/licenses/android-sdk-license"
-      - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
       - run:
