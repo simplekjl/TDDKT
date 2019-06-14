@@ -6,22 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.UserAdapter
-import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_users.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
 
     private var onUserFragmentListener: OnUsersFragmentListener? = null
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModel()
 
     //private var listener: UsersFragmentInteractionListener? = null
 
@@ -35,7 +33,6 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
 
         //avoid leaks using the lifecycle of the fragment
         viewModel.getUsers().observe(viewLifecycleOwner, Observer<List<User>> {

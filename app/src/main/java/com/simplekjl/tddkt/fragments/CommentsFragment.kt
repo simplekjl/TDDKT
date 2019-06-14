@@ -6,22 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.CommentAdapter
-import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_users.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CommentsFragment : BaseFragment() {
 
     private var listener: CommentAdapter.OnCommentClicked? = null
     private var postId: Int = 0
     private var isTwoPanel = false
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModel()
 
     fun CommentsFragment() {
 
@@ -46,7 +44,6 @@ class CommentsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this, ViewModelFactory(RepositoryImpl())).get(MainViewModel::class.java)
         showLoader()
 //        viewModel.init()
         if (isTwoPanel) {
