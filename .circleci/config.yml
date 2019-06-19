@@ -11,6 +11,24 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
+          name: Installing Platform Tools and Tools
+          command: echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
+      - run:
+          name: Installing Android 29
+          command: echo y | android update sdk --no-ui --all --filter "android-29, build-tools-29.0.0"
+      - run:
+          name: Approve license for build tools
+          command: (echo y; echo y; echo y; echo y; echo y; echo y) | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+#      - run:
+#          name: Making Directory Licenses
+#          command: mkdir "/opt/android-sdk/licenses" || true echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "/opt/android-sdk/licenses/android-sdk-license"
+#      - run:
+#          name: Preview Licenses
+#          command: echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "/opt/android-sdk/licenses/android-sdk-preview-license"
+#      - run:
+#          name: Accepting Licenses
+#          command: echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "/opt/android-sdk/licenses/android-sdk-license"
+      - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
       - run:

@@ -1,51 +1,61 @@
 package com.simplekjl.tddkt.adapters
 
-import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.data.models.User
+import com.simplekjl.tddkt.databinding.UserItemBinding
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.user_item.view.*
+import org.jetbrains.annotations.NotNull
 
-class UserAdapter(var users: List<User>, var listener: OnUserClicked?) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(var users: List<User>, private val listener: OnUserClicked?) :
+    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+    companion object {
 
-    private lateinit var context: Context
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        context = parent.context
-        val view = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false)
-        return ViewHolder(view)
+        @JvmStatic
+        @BindingAdapter(value = ["bind:imageUrl", "bind:errorImage"], requireAll = true)
+        fun loadImage(@NotNull view: ImageView, @NotNull url: String, urlErrorImage: Drawable) {
+            //"https://api.adorable.io/avatars/285/oh.png"
+            Picasso.get()
+                .load(url)
+                .error(urlErrorImage)
+                .into(view)
+        }
+    }
+
+    private lateinit var binding: UserItemBinding
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        //getting the layout inflater
+        val inflater = LayoutInflater.from(parent.context)
+        binding = DataBindingUtil.inflate(inflater, R.layout.user_item, parent, false)
+        return UserViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return users.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setItem(users[position],listener)
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        val user = users[position]
+        holder.setItem(user, listener)
     }
 
 
-    inner class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
-
-
-
+    inner class UserViewHolder(val binding: UserItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun setItem(user: User, listener: OnUserClicked?) {
-            Picasso.get()
-                .load("https://api.adorable.io/avatars/285/oh.png")
-                .into(view.user_profile_photo)
-
-            view.comment_username.text = user.name
-            view.comment_user_email.text = user.email
-            view.comment_body.text = context.getString(R.string.at).plus(user.username)
-            view.more_details.setOnClickListener { listener?.onUserClicked(user.id) }
+            // setting the variables in the view
+            binding.user = user
+            binding.moreDetails.setOnClickListener { listener?.onUserClicked(user.id) }
+            binding.executePendingBindings()
         }
     }
 
     interface OnUserClicked {
         fun onUserClicked(position: Int)
     }
-
 }

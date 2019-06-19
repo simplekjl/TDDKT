@@ -7,20 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.simplekjl.tddkt.R
 import com.simplekjl.tddkt.adapters.PostAdapter
 import com.simplekjl.tddkt.adapters.PostAdapter.OnPostClicked
-import com.simplekjl.tddkt.data.CacheImpl
-import com.simplekjl.tddkt.data.RepositoryImpl
 import com.simplekjl.tddkt.data.models.Post
+import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import com.simplekjl.tddkt.viewModels.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_users.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PostsFragment : BaseFragment(), OnPostClicked {
+
 
     private var isTwoPanel = false
     private var userId: Int = -1
@@ -68,9 +66,21 @@ class PostsFragment : BaseFragment(), OnPostClicked {
             val gridLayoutManager = GridLayoutManager(activity, 1)
             rv_generic.layoutManager = gridLayoutManager
             val adapter =
-                activity?.let { currentActivity -> PostAdapter(it, viewLifecycleOwner, this, viewModel,currentActivity) }
+                activity?.let { currentActivity ->
+                    PostAdapter(
+                        it,
+                        viewLifecycleOwner,
+                        this,
+                        viewModel,
+                        currentActivity
+                    )
+                }
             rv_generic.adapter = adapter
         }
+    }
+
+    override fun render(state: UiState) {
+
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
