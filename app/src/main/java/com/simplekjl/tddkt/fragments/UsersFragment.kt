@@ -37,7 +37,7 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //avoid leaks using the lifecycle of the fragment
-        viewModel.getUsers().observe(viewLifecycleOwner, Observer<UiState> { state ->
+        viewModel.getUsersAndStoreInCache().observe(viewLifecycleOwner, Observer<UiState> { state ->
             render(state)
         })
     }
@@ -60,10 +60,10 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is UsersFragment.OnUsersFragmentListener) {
+        if (context is OnUsersFragmentListener) {
             onUserFragmentListener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnUsersFragmentListener ")
+            throw RuntimeException("$context must implement OnUsersFragmentListener ")
         }
     }
 
@@ -83,10 +83,12 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
     }
 
     private fun createAdapter(data: List<User>) {
-        val linearLayoutManager = LinearLayoutManager(activity)
-        rv_generic.layoutManager = linearLayoutManager
-        val adapter = UserAdapter(data, this)
-        rv_generic.adapter = adapter
+        activity?.let {
+            val linearLayoutManager = LinearLayoutManager(activity)
+            rv_generic.layoutManager = linearLayoutManager
+            val adapter = UserAdapter(data, this)
+            rv_generic.adapter = adapter
+        }
     }
 
     override fun onDetach() {
@@ -104,8 +106,7 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
         fun newInstance() =
             UsersFragment().apply {
                 arguments = Bundle().apply {
-                    //                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
+                    // pass in case two panel
                 }
             }
     }

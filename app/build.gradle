@@ -37,6 +37,11 @@ android {
     dataBinding {
         enabled = true
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -92,4 +97,6 @@ dependencies {
     implementation 'org.koin:koin-androidx-scope:2.0.1'
     // or Koin for Android Architecture ViewModel
     implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+    testImplementation 'org.robolectric:robolectric:4.3'
+
 }
