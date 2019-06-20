@@ -47,7 +47,6 @@ class User() : Parcelable {
         }
     }
 
-    fun getFullAddress(): String = address.suite + address.street + address.city + address.city
 
     fun getCompanyDetails(): String = company.name + ""
 }

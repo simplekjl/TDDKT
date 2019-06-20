@@ -19,13 +19,16 @@ class MainViewModel(var repository: Repository) : ViewModel() {
 
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun getUsers(): LiveData<UiState> {
+    fun getUsersAndStoreInCache(): LiveData<UiState> {
 //        List<User>
         val data: MutableLiveData<UiState> = MutableLiveData()
         compositeDisposable.add(
             repository.getUsers().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(
-                    { listUsers -> data.value = Success(listUsers as List<User>) },
+                    { listUsers ->
+                        for (user in listUsers) repository.storeUser(user)
+                        data.value = Success(listUsers as List<User>)
+                    },
                     { data.value = ErrorMessage("") },
                     { /* On Complete */ },
                     { data.value = Loading })
@@ -69,7 +72,7 @@ class MainViewModel(var repository: Repository) : ViewModel() {
             repository.getCommentsByPostId(postId).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(
                     { listComments -> data.value = Success(listComments as List<Comment>) },
-                    { t: Throwable -> data.value = ErrorMessage("Something went wrong ") },
+                    { data.value = ErrorMessage("Something went wrong ") },
                     { /** complete action **/ },
                     { data.value = Loading })
         )
@@ -82,11 +85,12 @@ class MainViewModel(var repository: Repository) : ViewModel() {
         compositeDisposable.add(
             repository.getUserById(userId).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io()).subscribe(
+
                     { user -> data.value = Success(user) },
-                    { t: Throwable -> data.value = ErrorMessage("Something went wrong") },
-                    { /** complete action **/ },
-                    { data.value = Loading })
-        )
+                    { data.value = ErrorMessage("Something went wrong") }
+//                    { /** complete action **/ },
+//                    { data.value = Loading })
+                ))
         return data
     }
 

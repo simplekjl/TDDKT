@@ -1,6 +1,5 @@
 package com.simplekjl.tddkt.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import com.simplekjl.tddkt.viewModels.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserProfileFragment : BaseFragment() {
-    private var listener: OnFragmentUserProfilenteractiion? = null
     private var userId: Int = -1
     private var isTwoPanel = false
     private val viewModel: MainViewModel by viewModel()
@@ -38,9 +36,10 @@ class UserProfileFragment : BaseFragment() {
     ): View? {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_user_profile, container, false)
+            R.layout.fragment_user_profile, container, false
+        )
         //getting the user and passing it to the dataBinding
-        viewModel.getUserById(userId).observe(viewLifecycleOwner, Observer<UiState> {state ->
+        viewModel.getUserById(userId).observe(viewLifecycleOwner, Observer<UiState> { state ->
             render(state)
 
         })
@@ -57,14 +56,6 @@ class UserProfileFragment : BaseFragment() {
         super.updateActivityTitle(this)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-//        if (context is OnFragmentUserProfilenteractiion) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentUserProfilenteractiion")
-//        }
-    }
 
     override fun render(state: UiState) {
         when (state) {
@@ -82,15 +73,6 @@ class UserProfileFragment : BaseFragment() {
         }
     }
 
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentUserProfilenteractiion {
-        fun onUserClicks()
-    }
 
     companion object {
 

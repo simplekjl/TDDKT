@@ -1,16 +1,29 @@
 package com.simplekjl.tddkt.data
 
 import com.simplekjl.tddkt.data.models.User
+import io.reactivex.Single
 
 class CacheImpl : Cache {
+
     //cache
-    private var userCache: Map<Int, User> = emptyMap()
+    private var userCache: MutableMap<Int, User> = mutableMapOf()
 
-    override fun getUserId(userId: Int): User {
+    override fun getUserId(userId: Int): Single<User> {
+        return Single.create { emitter ->
+            run {
+                if (userCache[userId] != null) {
+                    emitter.onSuccess(userCache[userId] as User)
+                    System.out.println("getting the user from cache")
+                } else {
 
-        if (userCache[userId] != null) {
-           return  userCache[userId] as User
+                    emitter.onError(Throwable())
+                }
+            }
         }
-        return User()
     }
+    override fun storeUser(user: User) {
+        val userId = user.id
+        userCache[userId] = user
+    }
+
 }

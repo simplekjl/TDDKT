@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.simplekjl.tddkt.fragments.CommentsFragment
@@ -57,8 +58,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun setupTwoPanelView() {
-
-        //TODO update the navigation for landscape when using profile fragment
         val fragmentManager = supportFragmentManager
 
         fragmentManager.beginTransaction()
@@ -122,11 +121,18 @@ class MainActivity : AppCompatActivity(),
                 finish()
             }
             R.id.menu_posts -> {
-                setFragment(PostsFragment.newInstance(isTwoPanel, userId))
-
+                if (isTwoPanel) {
+                    Toast.makeText(this, getString(R.string.under_development), Toast.LENGTH_LONG).show()
+                } else {
+                    setFragment(PostsFragment.newInstance(isTwoPanel, userId))
+                }
             }
             R.id.menu_users -> {
-                setFragment(UsersFragment.newInstance())
+                if (isTwoPanel) {
+                    Toast.makeText(this, getString(R.string.under_development), Toast.LENGTH_LONG).show()
+                } else {
+                    setFragment(UsersFragment.newInstance())
+                }
             }
         }
         return true

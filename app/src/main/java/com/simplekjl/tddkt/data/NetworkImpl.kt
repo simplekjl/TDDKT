@@ -5,6 +5,7 @@ import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.network.NetworkService
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,16 +27,17 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
     }
 
 
-    override fun getUserById(userId: Int): Observable<User> {
-        return Observable.create { emitter ->
+    override fun getUserById(userId: Int): Single<User> {
+        return Single.create { emitter ->
             networkService.getUserById(userId).enqueue(object : Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     // in case is e,pty return default
                     emitter.onError(t)
+                    System.out.println("user from network")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    emitter.onNext(response.body() as User)
+                    emitter.onSuccess(response.body() as User)
                 }
             })
         }
@@ -94,6 +96,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
                 override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                     emitter.onError(t)
                 }
+
                 override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                     emitter.onNext(response.body() ?: emptyList())
                 }
@@ -108,6 +111,7 @@ class NetworkImpl(private val networkService: NetworkService) : Network {
                 override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                     emitter.onError(t)
                 }
+
                 override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                     emitter.onNext(response.body() ?: emptyList())
                 }

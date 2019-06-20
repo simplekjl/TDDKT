@@ -11,6 +11,7 @@ import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
 import com.simplekjl.tddkt.ui.ErrorMessage
 import com.simplekjl.tddkt.ui.Success
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.junit.Assert.*
@@ -71,9 +72,9 @@ class MainViewModelTest {
         whenever(mockRepository.getUsers())
             .thenReturn(Observable.just(arrayListOf(User(), User())))
 
-        viewModel.getUsers().observeForever(mockLiveDataObserver)
+        viewModel.getUsersAndStoreInCache().observeForever(mockLiveDataObserver)
 
-        assertNotNull(viewModel.getUsers())
+        assertNotNull(viewModel.getUsersAndStoreInCache())
     }
 
     @Test
@@ -84,7 +85,7 @@ class MainViewModelTest {
             .thenReturn(Observable.just(list))
 //            .thenReturn(Observable.create { emitter -> emitter.onNext(list)})
         //fire the test method
-        val result = viewModel.getUsers().value as Success<*>
+        val result = viewModel.getUsersAndStoreInCache().value as Success<*>
         assertEquals(list, result.data)
 
     }
@@ -94,7 +95,7 @@ class MainViewModelTest {
 
         whenever(mockRepository.getUsers())
             .thenReturn(Observable.error(Throwable()))
-        val result = viewModel.getUsers().value as ErrorMessage
+        val result = viewModel.getUsersAndStoreInCache().value as ErrorMessage
         //assert
         assertNotNull(result)
 
@@ -146,7 +147,7 @@ class MainViewModelTest {
     @Test
     fun `When getUserById() is called and it replies with an User to Live Data`() {
         val user = User()
-        whenever(mockRepository.getUserById(123)).thenReturn(Observable.just(user))
+        whenever(mockRepository.getUserById(123)).thenReturn(Maybe.just(user))
         val result = viewModel.getUserById(123).value as Success<*>
         // assert
         assertEquals(user, result.data as User)
@@ -154,7 +155,7 @@ class MainViewModelTest {
 
     @Test
     fun `When getUserById() is called and returns onError with an empty User`() {
-        whenever(mockRepository.getUserById(123)).thenReturn(Observable.error(Throwable()))
+        whenever(mockRepository.getUserById(123)).thenReturn(Maybe.error(Throwable()))
         val result = viewModel.getUserById(123).value as ErrorMessage
 
         // assert
