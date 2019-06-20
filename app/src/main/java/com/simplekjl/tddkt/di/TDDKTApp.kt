@@ -1,6 +1,7 @@
 package com.simplekjl.tddkt.di
 
 import android.app.Application
+import com.simplekjl.tddkt.BuildConfig
 import com.simplekjl.tddkt.data.CacheImpl
 import com.simplekjl.tddkt.data.NetworkImpl
 import com.simplekjl.tddkt.data.Repository
@@ -20,7 +21,7 @@ class TDDKTApp : Application() {
     val appModule = module {
         single<Retrofit> {
             Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .baseUrl("https://jsonplaceholder.typicode.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }

@@ -14,7 +14,7 @@ import com.simplekjl.tddkt.adapters.PostAdapter.OnPostClicked
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.generic_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PostsFragment : BaseFragment(), OnPostClicked {
@@ -38,7 +38,7 @@ class PostsFragment : BaseFragment(), OnPostClicked {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_users, container, false)
+        return inflater.inflate(R.layout.generic_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

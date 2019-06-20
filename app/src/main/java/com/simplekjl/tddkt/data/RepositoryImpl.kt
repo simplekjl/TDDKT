@@ -1,5 +1,6 @@
 package com.simplekjl.tddkt.data
 
+import com.simplekjl.tddkt.data.models.AlbumImage
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -10,6 +11,10 @@ import io.reactivex.Observable
  *  Repository decides where to take data, it can be Database, Cache or Network
  */
 class RepositoryImpl constructor(private val cache: Cache, private val network: Network) : Repository {
+    override fun getImages(): Observable<List<AlbumImage>> {
+        return network.getImages()
+    }
+
     override fun storeUser(user: User) {
         cache.storeUser(user)
     }

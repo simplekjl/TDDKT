@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.simplekjl.tddkt.data.Repository
+import com.simplekjl.tddkt.data.models.AlbumImage
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -115,6 +116,19 @@ class MainViewModel(var repository: Repository) : ViewModel() {
                 .subscribeOn(Schedulers.io()).subscribe(
                     { count -> data.value = count },
                     { data.value = 0 })
+        )
+        return data
+    }
+
+    fun getImages(): LiveData<UiState> {
+        val data: MutableLiveData<UiState> = MutableLiveData()
+        compositeDisposable.add(
+            repository.getImages().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
+                .subscribe(
+                    { list -> data.value = Success<List<AlbumImage>>(list) },
+                    { data.value = ErrorMessage("We couldn't reach our servers, please try again later.") },
+                    { /* nothing to do */ },
+                    { data.value = Loading })
         )
         return data
     }

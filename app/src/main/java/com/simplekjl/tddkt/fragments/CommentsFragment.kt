@@ -12,20 +12,16 @@ import com.simplekjl.tddkt.adapters.CommentAdapter
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.ui.*
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.generic_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CommentsFragment : BaseFragment() {
 
 
-    private var listener: CommentAdapter.OnCommentClicked? = null
     private var postId: Int = 0
     private var isTwoPanel = false
     private val viewModel: MainViewModel by viewModel()
 
-    fun CommentsFragment() {
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +37,7 @@ class CommentsFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_users, container, false)
+        return inflater.inflate(R.layout.generic_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +84,7 @@ class CommentsFragment : BaseFragment() {
     private fun setAdapter(comments: List<Comment>) {
         val gridLayoutManager = GridLayoutManager(activity, 1)
         rv_generic.layoutManager = gridLayoutManager
-        val adapter = CommentAdapter(comments, listener)
+        val adapter = CommentAdapter(comments)
         rv_generic.adapter = adapter
 
     }
@@ -100,7 +96,6 @@ class CommentsFragment : BaseFragment() {
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
     }
 
     companion object {

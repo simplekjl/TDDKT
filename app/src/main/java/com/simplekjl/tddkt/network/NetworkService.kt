@@ -1,5 +1,6 @@
 package com.simplekjl.tddkt.network
 
+import com.simplekjl.tddkt.data.models.AlbumImage
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -14,6 +15,7 @@ GET	/posts/1
 GET	/posts/1/comments
 GET	/comments?postId=1
 GET	/posts?userId=1
+GET /photos  -> CAUTION return 5000 limit to a few
  */
 interface NetworkService {
 
@@ -34,5 +36,9 @@ interface NetworkService {
 
     @GET("users/{id}")
     fun getUserById(@Path("id") userId: Int): Call<User>
+
+    @GET("photos")
+    fun getImages(): Call<List<AlbumImage>>
+
 
 }

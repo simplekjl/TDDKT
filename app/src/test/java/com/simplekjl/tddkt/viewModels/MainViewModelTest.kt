@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.simplekjl.tddkt.RxImmediateSchedulerRule
 import com.simplekjl.tddkt.data.Repository
+import com.simplekjl.tddkt.data.models.AlbumImage
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -199,5 +200,12 @@ class MainViewModelTest {
         assertEquals(1, viewModel.compositeDisposable.size())
         viewModel.clear()
         assertEquals(0, viewModel.compositeDisposable.size())
+    }
+
+    @Test
+    fun getImages() {
+        val list = listOf(AlbumImage())
+        whenever(mockRepository.getImages()).thenReturn(Observable.create {  it.onNext(list)})
+        mockRepository.getImages().test().assertValue(list)
     }
 }

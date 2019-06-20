@@ -15,7 +15,7 @@ import com.simplekjl.tddkt.ui.Loading
 import com.simplekjl.tddkt.ui.Success
 import com.simplekjl.tddkt.ui.UiState
 import com.simplekjl.tddkt.viewModels.MainViewModel
-import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.generic_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -24,13 +24,11 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
     private var onUserFragmentListener: OnUsersFragmentListener? = null
     private val viewModel: MainViewModel by viewModel()
 
-    //private var listener: UsersFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            //            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
+            // params in case we need
         }
     }
 
@@ -50,7 +48,7 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_users, container, false)
+        return inflater.inflate(R.layout.generic_fragment, container, false)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -99,16 +97,6 @@ class UsersFragment : BaseFragment(), UserAdapter.OnUserClicked {
 
     interface OnUsersFragmentListener {
         fun onMoreDetailsCliked(userId: Int)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            UsersFragment().apply {
-                arguments = Bundle().apply {
-                    // pass in case two panel
-                }
-            }
     }
 
     override fun onDestroy() {
