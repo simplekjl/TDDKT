@@ -3,50 +3,39 @@
 
 ### Features
 
-- Show Posts.
-- Show Comments by Post.
-- Two panel view.
-- Testing  following the rule 70, 20, 10.
+- Users Screen
+- Post Screen
+- Images Screen
+- Testing following the rule 70, 20, 10.
 - MVVM architecture pattern.
+- Implementing SOLID principles and Clean architecture  ( in Progress ) 
 
-# Posts Code Challenge
+# Let's practice TDD 
 
 ![](https://api.adorable.io/avatars/285/abott@adorable.png)
 
 
-# Screen shoots 
-![Alt text](app/src/screenshots/Posts.jpg?raw=true "Post Screen")
-
-*Post Screen*
-
-![](app/src/screenshots/COmments.jpg?raw=true "Comments Screen")
-
-*Comments Screen*
-
-![](app/src/screenshots/MasterDetail.jpg?traw=true "Master Detail")
-
-*Master Detail View*
 
 # Architecture
 
 I used the new features such as LiveData to be aware of the events once the network gives a response back, future work would be add persistance libraries such as Room and provide a offline experience.
 
-- Fragment 
-  Dummy views mostly, communications listeners are needed for communications.
-Future work would be implement a MainUIModel which can define a state data and listen to this interface once the values are updated.
+- Fragments
+  Dummy views mostly, the current API that provides data doesn't contain great details for the objects this is why is full of   Lorem Ipsum, 
+  * Base Fragment contains the common functionalities among the fragment such as show progress bar, hide progress bar and         show/ hide recycler view
   
+- KOIN 
+  KOIN is implemented for dependency injection
+
 - MainViewModel 
-Recieves the data coming from the Repository, if transformations are need it this is a great place to make them.
+  Recieves the data coming from the Repository, if transformations are need it this is a great place to make them ( business    logic )
   
 - Repository 
-In charge of making service calls and a small cache system, the example of the `User.username ` for every post is taken with this strategy, the `userId` is verified in the cache system and if it exists we provide the data stored already preventing a network call.
+  Responsible of calling the specific method required for the view model, in this case I had implemented just one scenario where I have a `Maybe.concat(...)` in order to get the value from cache or network whatever come first will be serve to the user.
 
 - Adapters 
-Used of the ViewHolder pattern to populate views for Posts, Users, Comments.
+Used of the ViewHolder pattern to populate views for Posts, Users, Comments, AlbumImage.
 
-- Fragments
-Use of Fragments to allow flexibility for showing different types of views. 
-Further work would be to show the UserProfileFragment with its related post in a master detail view.
 
 # TDD
 
@@ -54,7 +43,10 @@ The technique TDD was used to develop some of the features.
 - Arrange
 - Act
 - Assert
-- UI Tests: 10% Integration Tests: 20% Unit Tests: 70%
+- UI Tests: 10% ( In Progress ) 
+- Integration Tests: 20% ( In Progress) 
+- Unit Tests: 70%  (90% complete) 
+
 
 
 # ICONS PROVIDED BY FONT AWESOME
