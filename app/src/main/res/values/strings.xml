@@ -15,4 +15,7 @@
     <string name="this_is_an_example_of_a_welcome_screen">This is an example of a welcome screen</string>
     <string name="urlImage">"https://api.adorable.io/avatars/285/oh.png"</string>
     <string name="under_development">Sorry! this window is still not supported in landscape at this time</string>
+    <string name="label_users">Users</string>
+    <string name="posts_label">Posts</string>
+    <string name="gallery_label">Gallery</string>
 </resources>

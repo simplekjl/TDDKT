@@ -1,73 +1,95 @@
 package com.simplekjl.tddkt
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.simplekjl.tddkt.fragments.CommentsFragment
-import com.simplekjl.tddkt.fragments.PostsFragment
-import com.simplekjl.tddkt.fragments.UserProfileFragment
-import com.simplekjl.tddkt.fragments.UsersFragment
+import androidx.viewpager.widget.ViewPager
+import com.simplekjl.tddkt.adapters.ScreenPagerAdapter
+import com.simplekjl.tddkt.fragments.*
+import com.simplekjl.tddkt.utils.ZoomOutPageTransformer
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(),
     PostsFragment.OnInteractionPostFragment,
     UsersFragment.OnUsersFragmentListener {
 
+    private lateinit var mPager: ViewPager
+    private lateinit var  pagerAdapter : ScreenPagerAdapter
     private var isTwoPanel = false
-    private var userId: Int = -1
+    var prevMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val orientation = resources.configuration.orientation
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // In landscape
-            isTwoPanel = true
-            setupTwoPanelView()
-        } else {
-            setFragment(PostsFragment.newInstance(isTwoPanel, userId))
-            isTwoPanel = false
+        mPager = findViewById(R.id.pager)
+        setupViewPager()
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        //Lets create the navigation bar
+        bottom_navigation?.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_users -> {
+                    mPager.setCurrentItem(0, true)
+                    updateTitleAndDrawer(pagerAdapter.getItem(0))
+                }
+                R.id.action_posts -> {
+                    mPager.setCurrentItem(1, true)
+                    updateTitleAndDrawer(pagerAdapter.getItem(1))
+                }
+                R.id.action_gallery -> {
+                    mPager.setCurrentItem(2, true)
+                    updateTitleAndDrawer(pagerAdapter.getItem(2))
+                }
+            }
+            true
         }
+    }
+
+    private fun setupViewPager() {
+        pagerAdapter = ScreenPagerAdapter(supportFragmentManager)
+        pagerAdapter.addFragment(UsersFragment())
+        pagerAdapter.addFragment(PostsFragment())
+        pagerAdapter.addFragment(ImagesFragment())
+        mPager.adapter = pagerAdapter
+        mPager.setPageTransformer(true, ZoomOutPageTransformer())
+        mPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                if (prevMenuItem != null) {
+                    prevMenuItem?.isChecked = false
+                } else {
+                    bottom_navigation?.menu?.getItem(0)?.isChecked = false
+                }
+                bottom_navigation?.menu?.getItem(position)?.isChecked = true
+                prevMenuItem = bottom_navigation?.menu?.getItem(position)
+                updateTitleAndDrawer(pagerAdapter.getItem(position))
+            }
+        })
     }
 
     override fun onBackPressed() {
-        val count = supportFragmentManager.backStackEntryCount
-        if (isTwoPanel) {
-            CommentsFragment.postIdObserver.value = -1
-            if (CommentsFragment.postIdObserver.value == -1) {
-                super.onBackPressed()
-            }
+        if (mPager.currentItem == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed()
         } else {
-            if (count == 1) {
-                finish()
-            } else {
-                supportFragmentManager.popBackStack()
-            }
+            // Otherwise, select the previous step.
+            mPager.currentItem = mPager.currentItem - 1
         }
+
     }
 
-    fun setFragment(newInstance: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment, newInstance)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun setupTwoPanelView() {
-        val fragmentManager = supportFragmentManager
-
-        fragmentManager.beginTransaction()
-            .replace(R.id.fragment2, PostsFragment.newInstance(isTwoPanel, userId))
-            .commit()
-
-        fragmentManager.beginTransaction()
-            .replace(R.id.fragment3, CommentsFragment.newInstance(isTwoPanel))
-            .commit()
-    }
 
     override fun onClickedItemPostFragment(postId: Int) {
         if (isTwoPanel) {
@@ -77,7 +99,6 @@ class MainActivity : AppCompatActivity(),
             bundle.putInt("postId", postId)
             val fragment = CommentsFragment.newInstance(isTwoPanel)
             fragment.arguments = bundle
-            setFragment(fragment)
         }
     }
 
@@ -89,7 +110,6 @@ class MainActivity : AppCompatActivity(),
             bundle.putInt("userId", userId)
             val fragment = UserProfileFragment.newInstance(isTwoPanel, userId)
             fragment.arguments = bundle
-            setFragment(fragment)
         }
     }
 
@@ -99,43 +119,15 @@ class MainActivity : AppCompatActivity(),
                 supportActionBar?.title = "Posts"
                 title = getString(R.string.posts_title)
             }
-            is CommentsFragment -> {
-                supportActionBar?.title = "Comments"
-                title = "Comments"
+            is ImagesFragment -> {
+                supportActionBar?.title = "Images"
+                title = "Images"
             }
             is UsersFragment -> {
                 supportActionBar?.title = "User"
                 title = "Users"
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.menu_close -> {
-                finish()
-            }
-            R.id.menu_posts -> {
-                if (isTwoPanel) {
-                    Toast.makeText(this, getString(R.string.under_development), Toast.LENGTH_LONG).show()
-                } else {
-                    setFragment(PostsFragment.newInstance(isTwoPanel, userId))
-                }
-            }
-            R.id.menu_users -> {
-                if (isTwoPanel) {
-                    Toast.makeText(this, getString(R.string.under_development), Toast.LENGTH_LONG).show()
-                } else {
-                    setFragment(UsersFragment.newInstance())
-                }
-            }
-        }
-        return true
     }
 
 }
