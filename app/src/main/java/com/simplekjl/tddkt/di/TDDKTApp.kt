@@ -21,7 +21,7 @@ class TDDKTApp : Application() {
     val appModule = module {
         single<Retrofit> {
             Retrofit.Builder()
-                .baseUrl(BuildConfig.HOST_URL_BASE)
+                .baseUrl("https://jsonplaceholder.typicode.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }
