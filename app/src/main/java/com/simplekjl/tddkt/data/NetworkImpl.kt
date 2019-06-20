@@ -1,5 +1,6 @@
 package com.simplekjl.tddkt.data
 
+import com.simplekjl.tddkt.data.models.AlbumImage
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -11,6 +12,20 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class NetworkImpl(private val networkService: NetworkService) : Network {
+    override fun getImages(): Observable<List<AlbumImage>> {
+        return Observable.create { emitter ->
+            networkService.getImages().enqueue(object : Callback<List<AlbumImage>> {
+                override fun onFailure(call: Call<List<AlbumImage>>, t: Throwable) {
+                    emitter.onError(t)
+                }
+
+                override fun onResponse(call: Call<List<AlbumImage>>, response: Response<List<AlbumImage>>) {
+                    emitter.onNext(response.body()?.take(50) ?: emptyList())
+                }
+            })
+
+        }
+    }
 
     override fun getCommentsCountByPostId(postId: Int): Observable<Int> {
         return Observable.create { emitter ->

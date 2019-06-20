@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.simplekjl.tddkt.MainActivity
 import com.simplekjl.tddkt.ui.UiState
-import kotlinx.android.synthetic.main.fragment_users.*
+import kotlinx.android.synthetic.main.generic_fragment.*
 
 abstract class BaseFragment : Fragment() {
 

@@ -1,5 +1,6 @@
 package com.simplekjl.tddkt.data
 
+import com.simplekjl.tddkt.data.models.AlbumImage
 import com.simplekjl.tddkt.data.models.Comment
 import com.simplekjl.tddkt.data.models.Post
 import com.simplekjl.tddkt.data.models.User
@@ -20,4 +21,5 @@ interface Network {
 
     fun getPosts(): Observable<List<Post>>
     fun getCommentsByPostId(postId: Int): Observable<List<Comment>>
+    fun getImages(): Observable<List<AlbumImage>>
 }
